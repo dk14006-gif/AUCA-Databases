@@ -1,8 +1,8 @@
 # AUCA-Databases Course (COM-424.1)
 
-**Student Name:** Kasiet Dokturbaeva /n
-**Major:** Software Engineering
-**Instructor:** Ph.D, Associate Professor Gulzada Esenalieva
+**Student Name:** Kasiet Dokturbaeva  
+**Major:** Software Engineering  
+**Instructor:** Ph.D, Associate Professor Gulzada Esenalieva  
 
 ---
 

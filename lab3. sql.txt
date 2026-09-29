@@ -1,0 +1,19 @@
+postgres=# CREATE TABLE students (
+postgres(#     id SERIAL PRIMARY KEY,
+postgres(#     name VARCHAR(100),
+postgres(#     age INT
+postgres(# );
+DzD"D~D`DsD?:  D_Ñ,D½D_Ñ^DµD½D,Dµ "students" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,
+postgres=# INSERT INTO students (name, age) VALUES ('Alice', 21), ('Bob', 23);
+INSERT 0 2
+postgres=# SELECT * FROM students;
+ id | name  | age
+----+-------+-----
+ 10 | Alice |  21
+ 11 | Bob   |  23
+(2 rows)
+
+
+postgres=# DELETE FROM students WHERE name IN ('Alice', 'Bob');
+DELETE 2
+postgres=#

@@ -1,0 +1,68 @@
+postgres=# CREATE TABLE students (
+postgres(# students_id SERIAL PRIMARY KEY,
+postgres(# name VARCHAR(100),
+postgres(# email VARCHAR(100),
+postgres(# faculty VARCHAR(50)
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO students (name, email, faculty) VALUES
+postgres-# ('Kasiet', 'dk14006@auca.com', 'SFW'),
+postgres-# ('Akbijkem', 'adokturbaeva.com', 'MED'),
+postgres-# ('Keremet', 'kerakg@abu.banditka', 'MSL'),
+postgres-# ('Begay', 'bekachill@kgma.kg', 'MED'),
+postgres-# ('Aielina', 'aikamaika3922@best.kg', 'MNS');
+INSERT 0 5
+postgres=# SELECT * FROM students;
+ students_id |   name   |         email         | faculty
+-------------+----------+-----------------------+---------
+           1 | Kasiet   | dk14006@auca.com      | SFW
+           2 | Akbijkem | adokturbaeva.com      | MED
+           3 | Keremet  | kerakg@abu.banditka   | MSL
+           4 | Begay    | bekachill@kgma.kg     | MED
+           5 | Aielina  | aikamaika3922@best.kg | MNS
+(5 rows)
+
+
+postgres=# SELECT name, email FROM students WHERE faculty = 'MED';
+   name   |       email
+----------+-------------------
+ Akbijkem | adokturbaeva.com
+ Begay    | bekachill@kgma.kg
+(2 rows)
+
+
+postgres=# SELECT name, faculty FROM students;
+   name   | faculty
+----------+---------
+ Kasiet   | SFW
+ Akbijkem | MED
+ Keremet  | MSL
+ Begay    | MED
+ Aielina  | MNS
+(5 rows)
+
+
+postgres=# SELECT students_id, faculty FROM students;
+ students_id | faculty
+-------------+---------
+           1 | SFW
+           2 | MED
+           3 | MSL
+           4 | MED
+           5 | MNS
+(5 rows)
+
+
+                                                  ^
+postgres=# SELECT name, email FROM students LIMIT 2;
+   name   |      email
+----------+------------------
+ Kasiet   | dk14006@auca.com
+ Akbijkem | adokturbaeva.com
+(2 rows)
+
+
+postgres=# -- Comments for 1 line
+postgres=# /* comments for
+postgres*# several lines*/
+postgres-#

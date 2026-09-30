@@ -1,0 +1,34 @@
+postgres=# \encoding UTF8
+postgres=# CREATE DATABASE university_db;
+DzD"D~D`DsD?:  D±D°D·D° D'D°D½D½Ñ<Ñ. "university_db" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,
+postgres=# \c university_db
+You are now connected to database "university_db" as user "postgres".
+university_db=# CREATE TABLE departments (
+university_db(# department_id SERIAL PRIMARY KEY,
+university_db(# department_name VARCHAR(100)
+university_db(# );
+CREATE TABLE
+university_db=# CREATE TABLE students (
+university_db(# student_id SERIAL PRIMARY KEY,
+university_db(# first_name VARCHAR(50),
+university_db(# last_name VARCHAR(50),
+university_db(# email VARCHAR(100) UNIQUE,
+university_db(# department_id INT REFERENCES departments(department_id)
+university_db(# );
+CREATE TABLE
+university_db=# INSERT INTO departments (department_name) VALUES ('Software Engineering');
+INSERT 0 1
+university_db=# INSERT INTO students (first_name, last_name, email, department_id)
+university_db-# VALUES ('Kasiet', 'Dokturbaeva', 'dk14006@auca.kg', 1), ('Sevara', 'Kasymova', 'ks14011@auca.kg', 1);
+INSERT 0 2
+university_db=# SELECT * FROM students;
+ student_id | first_name |  last_name  |      email      | department_id
+------------+------------+-------------+-----------------+---------------
+          1 | Kasiet     | Dokturbaeva | dk14006@auca.kg |             1
+          2 | Sevara     | Kasymova    | ks14011@auca.kg |             1
+(2 rows)
+
+
+university_db=# \c postgres
+You are now connected to database "postgres" as user "postgres".
+postgres=#

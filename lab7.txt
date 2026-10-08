@@ -1,0 +1,159 @@
+postgres=# CREATE TABLE students (
+postgres(#     student_id INTEGER,
+postgres(#     name VARCHAR(100),
+postgres(#     email VARCHAR(150),
+postgres(#     CONSTRAINT pk_students PRIMARY KEY (student_id)
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO students (student_id, name, email) VALUES
+postgres-# (14006, 'Kasiet Dokturbaeva', 'kas0201.16@gmail.com');
+INSERT 0 1
+postgres=# INSERT INTO students (name, email) VALUES ('Akbiikem', 'a_dokturbaeva@auca.kg');
+DzD"D~D`DsD?:  D·D½D°Ñ╪DµD½D,Dµ NULL D² Ñ?Ñ,D_D»D±Ñ+Dµ "student_id" D_Ñ,D½D_Ñ^DµD½D,Ñ? "students" D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ NOT NULL
+DETAIL:  DzÑ^D,D±D_Ñ╪D½D°Ñ? Ñ?Ñ,Ñ?D_DºD° Ñ?D_D'DµÑ?DD,Ñ, (null, Akbiikem, a_dokturbaeva@auca.kg).
+                                                             ^
+postgres=# INSERT INTO students (student_id, name, email) VALUES
+postgres-# (13099, 'Akbiikem', 'a_dokturbaeva@auca.kg');
+INSERT 0 1
+postgres=# SELECT * FROM students;
+ student_id |        name        |         email
+------------+--------------------+-----------------------
+      14006 | Kasiet Dokturbaeva | kas0201.16@gmail.com
+      13099 | Akbiikem           | a_dokturbaeva@auca.kg
+(2 rows)
+
+postgres=# CREATE TABLE course_enrollments (
+postgres(#     student_id INTEGER,
+postgres(#     course_id INTEGER,
+postgres(#     semester VARCHAR(20),
+postgres(#     enrollment_date DATE DEFAULT CURRENT_DATE,
+postgres(#     grade CHAR(2),
+postgres(#     PRIMARY KEY (student_id, course_id, semester)
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO course_enrollments (student_id, course_id, semester, grade) VALUES
+postgres-# (14006, 122, '2025-Fall', 'A'),
+postgres-# (14006, 222, '2025-Fall', 'B+'),
+postgres-# (14014, 122, '2026-Spring', 'A'),
+postgres-# (14006, 222, '2026-Spring', 'A+');
+INSERT 0 4
+postgres=# SELECT * FROM course_enrollments;
+ student_id | course_id |  semester   | enrollment_date | grade
+------------+-----------+-------------+-----------------+-------
+      14006 |       122 | 2025-Fall   | 2026-10-08      | A
+      14006 |       222 | 2025-Fall   | 2026-10-08      | B+
+      14014 |       122 | 2026-Spring | 2026-10-08      | A
+      14006 |       222 | 2026-Spring | 2026-10-08      | A+
+(4 rows)
+postgres=# CREATE TABLE products (
+postgres(#     product_id SERIAL PRIMARY KEY,
+postgres(#     product_name VARCHAR(100) NOT NULL,
+postgres(#     price DECIMAL(10,2)
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO products (product_name, price) VALUES
+postgres-# ('Database Textbook', 44.99),
+postgres-# ('MackBook Neo A18Pro', 870.00);
+INSERT 0 2
+postgres=# SELECT * FROM products;
+ product_id |    product_name     | price
+------------+---------------------+--------
+          1 | Database Textbook   |  44.99
+          2 | MackBook Neo A18Pro | 870.00
+(2 rows)
+postgres=# CREATE TABLE transactions (
+postgres(#     transaction_id BIGSERIAL PRIMARY KEY,
+postgres(#     amount DECIMAL(15,2),
+postgres(#     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO transactions (amount) VALUES
+postgres-# (4365849.75), (500500500500500.55), (3.00);
+DzD"D~D`DsD?:  D¿DµÑ?DµD¿D_D»D½DµD½D,Dµ D¿D_D»Ñ? numeric
+DETAIL:  DYD_D»Dµ Ñ? Ñ,D_Ñ╪D½D_Ñ?Ñ,ÑOÑZ 15, D¿D_Ñ?Ñ?D'DºD_D¼ 2 D'D_D»DD½D_ D_DºÑ?ÑƒD3D»Ñ?Ñ,ÑOÑ?Ñ? D'D_ D°D±Ñ?D_D»ÑZÑ,D½D_D3D_ D·D½D°Ñ╪DµD½D,Ñ? D¼DµD½ÑOÑ^Dµ Ñ╪DµD¼ 10^13.
+postgres=#  INSERT INTO transactions (amount) VALUES
+postgres-# (4365849.75), (5005005005005.00), (3.99);
+INSERT 0 3
+postgres=# SELECT * FROM transactions;
+ transaction_id |      amount      |      transaction_date
+----------------+------------------+----------------------------
+              1 |       4365849.75 | 2026-10-08 04:12:02.252046
+              2 | 5005005005005.00 | 2026-10-08 04:12:02.252046
+              3 |             3.99 | 2026-10-08 04:12:02.252046
+(3 rows)
+
+
+postgres=# INSERT INTO transactions (amount) VALUES
+postgres-# (99.99);
+INSERT 0 1
+postgres=# SELECT * FROM transactions;
+ transaction_id |      amount      |      transaction_date
+----------------+------------------+----------------------------
+              1 |       4365849.75 | 2026-10-08 04:12:02.252046
+              2 | 5005005005005.00 | 2026-10-08 04:12:02.252046
+              3 |             3.99 | 2026-10-08 04:12:02.252046
+              4 |            99.99 | 2026-10-08 04:13:15.763041
+(4 rows)
+
+
+postgres=# CREATE TABLE orders (
+postgres(#     order_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+postgres(#     customer_name VARCHAR(100),
+postgres(#     order_date DATE DEFAULT CURRENT_DATE
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO orders (customer_name) VALUES
+postgres-# ('Akbijkem Dokturbaeva Ulanovna'), ('Nurmira Kydyrmyshova Adabaevna');
+INSERT 0 2
+postgres=# SELECT * FROM orders;
+ order_id |         customer_name          | order_date
+----------+--------------------------------+------------
+        1 | Akbijkem Dokturbaeva Ulanovna  | 2026-10-08
+        2 | Nurmira Kydyrmyshova Adabaevna | 2026-10-08
+(2 rows)
+
+
+postgres=# CREATE TABLE customers (
+postgres(#     customer_id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+postgres(#     customer_name VARCHAR(100),
+postgres(#     email VARCHAR(150)
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO customers (customer_id, customer_name, email) VALUES
+postgres-# (14006, 'Kasiet', 'dk14006@auca.kg');
+INSERT 0 1
+postgres=# INSERT INTO customers (customer_name, email) VALUES
+postgres-# ('Keremet', 'kerakrasotka@gmail.com');
+INSERT 0 1
+postgres=# SELECT * FROM customers;
+ customer_id | customer_name |         email
+-------------+---------------+------------------------
+       14006 | Kasiet        | dk14006@auca.kg
+           1 | Keremet       | kerakrasotka@gmail.com
+(2 rows)
+
+
+postgres=# CREATE TABLE departments (
+postgres(#     dept_id INTEGER PRIMARY KEY,
+postgres(#     dept_name VARCHAR(100)
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO departments VALUES (1, 'Computer Science');
+INSERT 0 1
+postgres=# INSERT INTO departments VALUES (1, 'Mathematics');
+DzD"D~D`DsD?:  D¿D_D²Ñ,D_Ñ?Ñ?ÑZÑ%DµDµÑ?Ñ? D·D½D°Ñ╪DµD½D,Dµ DºD»ÑZÑ╪D° D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ ÑƒD½D,DºD°D»ÑOD½D_Ñ?Ñ,D, "departments_pkey"
+DETAIL:  DsD»ÑZÑ╪ "(dept_id)=(1)" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,.
+postgres=#  INSERT INTO departments VALUES (2, 'Mathematics');
+INSERT 0 1
+postgres=# INSERT INTO departments VALUES (NULL, 'Physics');
+DzD"D~D`DsD?:  D·D½D°Ñ╪DµD½D,Dµ NULL D² Ñ?Ñ,D_D»D±Ñ+Dµ "dept_id" D_Ñ,D½D_Ñ^DµD½D,Ñ? "departments" D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ NOT NULL
+DETAIL:  DzÑ^D,D±D_Ñ╪D½D°Ñ? Ñ?Ñ,Ñ?D_DºD° Ñ?D_D'DµÑ?DD,Ñ, (null, Physics).
+postgres=# INSERT INTO departments VALUES (3, 'Physics');
+INSERT 0 1
+postgres=# SELECT * FROM departments;
+ dept_id |    dept_name
+---------+------------------
+       1 | Computer Science
+       2 | Mathematics
+       3 | Physics
+(3 rows)

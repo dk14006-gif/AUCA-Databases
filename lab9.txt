@@ -1,0 +1,125 @@
+postgres=# CREATE TABLE authors (
+postgres(# author_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(50) NOT NULL,
+postgres(# last_name VARCHAR(50) NOT NULL,
+postgres(# birth_date DATE
+postgres(# );
+CREATE TABLE
+postgres=# CREATE TABLE books (
+postgres(# book_id SERIAL PRIMARY KEY,
+postgres(# title VARCHAR(200) NOT NULL,
+postgres(# isbn VARCHAR(13) UNIQUE,
+postgres(# publication_year INTEGER,
+postgres(# available_copies INTEGER DEFAULT 1
+postgres(# );
+CREATE TABLE
+postgres=# CREATE TABLE book_authors (
+postgres(# book_id INTEGER,
+postgres(# author_id INTEGER,
+postgres(# PRIMARY KEY (book_id, author_id),
+postgres(# FOREIGN KEY (book_id) REFERENCES books (book_id),
+postgres(# FOREIGN KEY (author_id) REFERENCES authors (author_id)
+postgres(# );
+CREATE TABLE
+postgres=# CREATE TABLE members (
+postgres(# member_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(50) NOT NULL,
+postgres(# last_name VARCHAR(50) NOT NULL,
+postgres(# email VARCHAR(100) UNIQUE NOT NULL,
+postgres(# phone VARCHAR(15),
+postgres(# membership_date DATE DEFAULT CURRENT_DATE
+postgres(# );
+CREATE TABLE
+postgres=# CREATE TABLE loans (
+postgres(# loan_id SERIAL PRIMARY KEY,
+postgres(# member_id INTEGER NOT NULL,
+postgres(# book_id INTEGER NOT NULL,
+postgres(# loan_date DATE DEFAULT CURRENT_DATE,
+postgres(# due_date DATE NOT NULL,
+postgres(# return_date DATE,
+postgres(# late_fee DECIMAL(10,2) DEFAULT 0.00,
+postgres(# FOREIGN KEY (member_id) REFERENCES members (member_id),
+postgres(# FOREIGN KEY (book_id) REFERENCES books (book_id)
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO authors (first_name, last_name, birth_date) VALUES
+postgres-# ('Leo', 'Tolstoy', '1828-09-09'),
+postgres-# ('Fedor', 'Dostoevsky', '1821-11-11'),
+postgres-# ('George', 'Orwell', '1903-06-25');
+INSERT 0 3
+postgres=# SELECT * FROM authors;
+ author_id | first_name | last_name  | birth_date
+-----------+------------+------------+------------
+         1 | Leo        | Tolstoy    | 1828-09-09
+         2 | Fedor      | Dostoevsky | 1821-11-11
+         3 | George     | Orwell     | 1903-06-25
+(3 rows)
+
+
+postgres=# INSERT INTO books (title, isbn, publication_year, available_copies) VALUES
+postgres-# ('War and Peace', '9780199232765', 1869, 3),
+postgres-# ('Crime and Punishment', '9780140449136', 1866, 2),
+postgres-# ('1984', '9780451524935', 1949, 5);
+INSERT 0 3
+postgres=# SELECT * FROM books;
+ book_id |        title         |     isbn      | publication_year | available_copies
+---------+----------------------+---------------+------------------+------------------
+       1 | War and Peace        | 9780199232765 |             1869 |                3
+       2 | Crime and Punishment | 9780140449136 |             1866 |                2
+       3 | 1984                 | 9780451524935 |             1949 |                5
+(3 rows)
+
+
+postgres=# INSERT INTO book_authors (book_id, author_id) VALUES
+postgres-# (1, 1),
+postgres-# (2, 2),
+postgres-# (3, 3);
+INSERT 0 3
+postgres=# SELECT * FROM book_authors;
+ book_id | author_id
+---------+-----------
+       1 |         1
+       2 |         2
+       3 |         3
+(3 rows)
+
+
+postgres=# INSERT INTO members (first_name, last_name, email, phone) VALUES
+postgres-# ('Aidemi', 'Kerimova', 'aidemi@auca.kg', '+996555123456'),
+postgres-# ('Bekzat', 'Urmanbetov', 'bekzat@gmail.com', '+996700987654');
+INSERT 0 2
+postgres=# SELECT * FROM members;
+ member_id | first_name | last_name  |      email       |     phone     | membership_date
+-----------+------------+------------+------------------+---------------+-----------------
+         1 | Aidemi     | Kerimova   | aidemi@auca.kg   | +996555123456 | 2026-10-11
+         2 | Bekzat     | Urmanbetov | bekzat@gmail.com | +996700987654 | 2026-10-11
+(2 rows)
+
+
+postgres=# INSERT INTO loans (member_id, book_id, loan_date, due_date) VALUES
+postgres-# (1, 1, '2026-10-01', '2026-11-01'),
+postgres-# (2, 3, '2026-10-05', '2026-11-05');
+INSERT 0 2
+postgres=# SELECT * FROM loans;
+ loan_id | member_id | book_id | loan_date  |  due_date  | return_date | late_fee
+---------+-----------+---------+------------+------------+-------------+----------
+       1 |         1 |       1 | 2026-10-01 | 2026-11-01 |             |     0.00
+       2 |         2 |       3 | 2026-10-05 | 2026-11-05 |             |     0.00
+(2 rows)
+
+postgres=# SELECT
+postgres-# m.first_name || ' ' || m.last_name AS member_name,
+postgres-# b.title AS book_title,
+postgres-# l.loan_date,
+postgres-# l.due_date
+postgres-# FROM loans l
+postgres-# JOIN members m ON l.member_id = m.member_id
+postgres-# JOIN books b ON l.book_id = b.book_id;
+    member_name    |  book_title   | loan_date  |  due_date
+-------------------+---------------+------------+------------
+ Aidemi Kerimova   | War and Peace | 2026-10-01 | 2026-11-01
+ Bekzat Urmanbetov | 1984          | 2026-10-05 | 2026-11-05
+(2 rows)
+
+
+postgres=#

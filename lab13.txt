@@ -1,0 +1,565 @@
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name
+--------+-------------------+-----------+------------+---------+----------------------
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva
+(5 rows)
+
+
+postgres=# --COUNT() - Counting Rows
+postgres=# SELECT COUNT(*) AS tottal_employees
+postgres-# FROM employees;
+ tottal_employees
+------------------
+                5
+(1 row)
+postgres=# INSERT INTO students (first_name, last_name, email, birth_date) VALUES
+postgres-# ('Sevara', 'Kasymova', 'ks14003@auca.kg', '2007-08-15'),
+postgres-# ('Medina', 'Mamanova', 'mm14014@auca.kg', '2006-07-14'),
+postgres-# ('Adinai', 'Muhtarbekova', 'ma14017@auca.kg', '2008-04-08');
+INSERT 0 3
+postgres=# SELECT * FROM students;
+ student_id | first_name |  last_name   |      email      | enrollment_date | birth_date
+------------+------------+--------------+-----------------+-----------------+------------
+          8 | Selima     | Askarbekova  |                 | 2026-10-20      | 2007-09-09
+          9 | Nazima     | Sabydasheva  |                 | 2026-10-20      | 2007-08-17
+         10 | Beguy      | Mukanbetova  |                 | 2026-10-20      | 2007-04-23
+         11 | Aielina    | Urkalieva    |                 | 2026-10-20      | 2008-02-02
+         12 | Sevara     | Kasymova     | ks14003@auca.kg | 2026-10-20      | 2007-08-15
+         13 | Medina     | Mamanova     | mm14014@auca.kg | 2026-10-20      | 2006-07-14
+         14 | Adinai     | Muhtarbekova | ma14017@auca.kg | 2026-10-20      | 2008-04-08
+(7 rows)
+
+
+postgres=# -- Count students with non-NULL email addresses
+postgres=# SELECT COUNT(email) AS student_with_email
+postgres-# FROM students;
+ student_with_email
+--------------------
+                  3
+(1 row)
+
+
+postgres=# -- Count unique departments
+postgres=# SELECT COUNT(DISTINCT dept_name) AS unique_departments
+postgres-# FROM departments;
+ unique_departments
+--------------------
+                  5
+(1 row)
+
+
+postgres=# SELECT * FROM departments;
+ dept_id |      dept_name       |    manager_name     |   budget
+---------+----------------------+---------------------+------------
+       3 | Marketing            | Alina Kulakova      |  400000.00
+       4 | Medical Centre       | Aibek Asanbekov     |  500000.00
+       5 | International Office | Meerim Bairova      |  800000.00
+       1 | Engineering          | Cabina Kenilchekova | 2000000.00
+       2 | Administrating       | Talgat Tulenbaev    | 1500000.00
+(5 rows)
+
+
+postgres=# --SUM() - Calculating Totals
+postgres=# --Calculate total salary expenditure
+postgres=# SELECT SUM(salary) AS total_salaries
+postgres-# FROM employees;
+ total_salaries
+----------------
+      522000.00
+(1 row)
+
+
+postgres=# -- Calculate total sales by department
+postgres=# SELECT dept_name, SUM(budget) AS total_budget
+postgres-# FROM departments
+postgres-# GROUP BY dept_name;
+      dept_name       | total_budget
+----------------------+--------------
+ Marketing            |    400000.00
+ International Office |    800000.00
+ Engineering          |   2000000.00
+ Medical Centre       |    500000.00
+ Administrating       |   1500000.00
+(5 rows)
+
+
+postgres=# --AVG() - Calculating Averages
+postgres=# -- Calculate average salary
+postgres=# SELECT AVG(salary) AS average_salary
+postgres-# FROM employees;
+   average_salary
+---------------------
+ 104400.000000000000
+(1 row)
+
+
+postgres=# ALTER TABLE employees
+postgres-# ADD COLUMN age INT;
+ALTER TABLE
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age
+--------+-------------------+-----------+------------+---------+----------------------+-----
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |
+(5 rows)
+
+
+postgres=# UPDATE employees
+postgres-# SET age = 18 WHERE emp_id = 1;
+UPDATE 1
+postgres=#  UPDATE employees SET age = 18 WHERE emp_id = 7;
+UPDATE 1
+postgres=# UPDATE employees SET age = 21 WHERE emp_id = 6;
+UPDATE 1
+postgres=# UPDATE employees SET age = 45 WHERE emp_id = 8;
+UPDATE 1
+postgres=# UPDATE employees SET age = 45 WHERE emp_id = 9;
+UPDATE 1
+postgres=# -- Calculate average age by department
+postgres=# SELECT name, AVG(age) AS avg_age
+postgres-# FROM employees
+postgres-# GROUP BY name;
+         name         |       avg_age
+----------------------+---------------------
+ Nurmira Kydyrmyshova | 45.0000000000000000
+ Akbiikem Dokturbaeva | 21.0000000000000000
+ Keremet Dokturbaeva  | 18.0000000000000000
+ Ulan Ishenabaev      | 45.0000000000000000
+ Kasiet Dokturbaeva   | 18.0000000000000000
+(5 rows)
+
+
+postgres=# SELECT dept_id, AVG(age) AS avg_age
+postgres-# FROM employees
+postgres-#  GROUP BY dept_id;
+ dept_id |       avg_age
+---------+---------------------
+       3 | 18.0000000000000000
+       4 | 45.0000000000000000
+       2 | 33.0000000000000000
+       1 | 18.0000000000000000
+(4 rows)
+
+
+postgres=# --MAX() and MIN() - Finding Extremes
+postgres=# -- Find highest and lowest salaries
+postgres=# SELECT
+postgres-# MAX(salary) AS highest_salary,
+postgres-# MIN(salary) AS lowest_salary
+postgres-# FROM employees;
+ highest_salary | lowest_salary
+----------------+---------------
+      200000.00 |      45000.00
+(1 row)
+
+
+postgres=# -- Find the most recent hire date by department
+postgres=# SELECT dept_id, MAX(hire_date) AS latest_hire
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id | latest_hire
+---------+-------------
+       3 | 2026-10-15
+       4 | 2026-10-15
+       2 | 2026-10-15
+       1 | 2026-10-11
+(4 rows)
+
+
+postgres=# --STRING_AGG() - Concatenating Strings
+postgres=# -- List all employees in each department as a comma-separated string
+postgres=# SELECT dept_id, STRING_AGG(name, ', ') AS employee_names
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id |               employee_names
+---------+--------------------------------------------
+       3 | Keremet Dokturbaeva
+       4 | Ulan Ishenabaev
+       2 | Akbiikem Dokturbaeva, Nurmira Kydyrmyshova
+       1 | Kasiet Dokturbaeva
+(4 rows)
+
+
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age
+--------+-------------------+-----------+------------+---------+----------------------+-----
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45
+(5 rows)
+
+
+postgres=# INSERT INTO employees(name, age, position, salary, dept_id) VALUES
+postgres-# ('Adel Kerimova', 19, 'Designer', 52000.00, 3);
+INSERT 0 1
+postgres=# INSERT INTO employees(name, age, position, salary, dept_id) VALUES
+postgres-# ('Elnure Bekeshova', 20, 'Nurse', 48000.00, 4),
+postgres-# ('Symbat Kanybekova', 18, 'SQL Developer', 79000.00, 1);
+INSERT 0 2
+postgres=#  SELECT dept_id, STRING_AGG(name, ', ') AS employee_names
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id |               employee_names
+---------+--------------------------------------------
+       3 | Keremet Dokturbaeva, Adel Kerimova
+       4 | Ulan Ishenabaev, Elnure Bekeshova
+       2 | Akbiikem Dokturbaeva, Nurmira Kydyrmyshova
+       1 | Kasiet Dokturbaeva, Symbat Kanybekova
+(4 rows)
+
+
+postgres=# -- Create a list of skills per employee (ordered alphabetically)
+postgres=# SELECT emp_id, STRING_AGG(position, ', ' ORDER BY position) AS skills
+postgres-# FROM employees
+postgres-# GROUP BY emp_id;
+ emp_id |      skills
+--------+-------------------
+      1 | Software Engineer
+      6 | Adviser
+      7 | Manager
+      8 | President
+      9 | Doctor
+     10 | Designer
+     11 | Nurse
+     12 | SQL Developer
+(8 rows)
+
+
+postgres=# SELECT
+postgres-#     dept_id,
+postgres-#     STRING_AGG(position, ', ' ORDER BY position) AS positions_list
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id |          positions_list
+---------+----------------------------------
+       1 | Software Engineer, SQL Developer
+       2 | Adviser, President
+       3 | Designer, Manager
+       4 | Doctor, Nurse
+(4 rows)
+
+
+postgres=# --ARRAY_AGG() - Creating Arrays
+postgres=# -- Create an array of all salaries in each department
+postgres=# SELECT dept_id, ARRAY_AGG(name ORDER BY name) AS employees
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id |                    employees
+---------+-------------------------------------------------
+       1 | {"Kasiet Dokturbaeva","Symbat Kanybekova"}
+       2 | {"Akbiikem Dokturbaeva","Nurmira Kydyrmyshova"}
+       3 | {"Adel Kerimova","Keremet Dokturbaeva"}
+       4 | {"Elnure Bekeshova","Ulan Ishenabaev"}
+(4 rows)
+
+
+postgres=# -- Create ordered array of employee names
+postgres=# SELECT dept_id, ARRAY_AGG(salary) AS salary_array
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id |     salary_array
+---------+----------------------
+       3 | {45000.00,52000.00}
+       4 | {125000.00,48000.00}
+       2 | {50000.00,200000.00}
+       1 | {102000.00,79000.00}
+(4 rows)
+
+
+postgres=# --Statistical Aggregate Functions
+postgres=# -- Standard deviation and variance
+postgres=#  SELECT dept_id
+postgres-# ,STDDEV(salary) AS salary_std_dev,
+postgres-# VARIANCE(salary) AS salary_variance
+postgres-# FROM employees
+postgres-#  GROUP BY dept_id;
+ dept_id |  salary_std_dev   |    salary_variance
+---------+-------------------+-----------------------
+       3 | 4949.747468305833 | 24500000.000000000000
+       4 |    54447.22215136 |   2964500000.00000000
+       2 |   106066.01717798 |  11250000000.00000000
+       1 |    16263.45596729 |    264500000.00000000
+(4 rows)
+
+
+postgres=# -- Correlation coefficient between two numeric columns
+postgres=# SELECT CORR(age, salary) AS age_salary_correlation
+postgres-# FROM employees;
+ age_salary_correlation
+------------------------
+     0.8360775518101127
+(1 row)
+
+postgres=# --Working with GROUP BY
+postgres=# --Basic GROUP BY
+postgres=# SELECT
+postgres-# d.dept_name AS category,
+postgres-# COUNT(e.emp_id) AS number_of_employees,
+postgres-# SUM(e.salary) AS total_salaries_value,
+postgres-# AVG(e.salary) AS average_salary
+postgres-# FROM employees e
+postgres-# JOIN departments d ON e.dept_id = d.dept_id
+postgres-# GROUP BY d.dept_name;
+    category    | number_of_employees | total_salaries_value |   average_salary
+----------------+---------------------+----------------------+---------------------
+ Marketing      |                   2 |             97000.00 |  48500.000000000000
+ Engineering    |                   2 |            181000.00 |  90500.000000000000
+ Medical Centre |                   2 |            173000.00 |  86500.000000000000
+ Administrating |                   2 |            250000.00 | 125000.000000000000
+(4 rows)
+
+
+postgres=# --Multiple Column Grouping
+postgres=# SELECT
+postgres-# EXTRACT(YEAR FROM hire_date) AS year,
+postgres-# EXTRACT(QUARTER FROM hire_date) AS quarter,
+postgres-# COUNT(*)  AS total_hires,
+postgres-# SUM(salary) AS total_salaries
+postgres-# FROM employees
+postgres-# GROUP BY EXTRACT(YEAR FROM hire_date), EXTRACT(QUARTER FROM hire_date)
+postgres-# ORDER BY year, quarter;
+ year | quarter | total_hires | total_salaries
+------+---------+-------------+----------------
+ 2026 |       4 |           8 |      701000.00
+(1 row)
+postgres=# --GROUP BY with Expressions
+postgres=# -- Group by calculated values
+postgres=# SELECT
+postgres-# CASE
+postgres-# WHEN age < 30 THEN 'Under 30'
+postgres-# WHEN age BETWEEN 30 AND 50 THEN '30-50'
+postgres-# ELSE 'Over 50'
+postgres-# END AS age_group,
+postgres-# COUNT(*) AS employee_count,
+postgres-# AVG(salary) AS avg_salary
+postgres-# FROM employees
+postgres-# GROUP BY
+postgres-# CASE
+postgres-# WHEN age < 30 THEN 'Under 30'
+postgres-#  WHEN age BETWEEN 30 AND 50 THEN '30-50'
+postgres-# ELSE 'Over 50'
+postgres-# END;
+ age_group | employee_count |     avg_salary
+-----------+----------------+---------------------
+ Under 30  |              6 |  62666.666666666667
+ 30-50     |              2 | 162500.000000000000
+(2 rows)
+
+
+postgres=# --HAVING Clause - Filtering Groups
+postgres=# \d employees
+                                       Table "public.employees"
+  Column   |          Type          | Collation | Nullable |                  Default
+-----------+------------------------+-----------+----------+-------------------------------------------
+ emp_id    | integer                |           | not null | nextval('employees_emp_id_seq'::regclass)
+ position  | character varying(100) |           |          |
+ salary    | numeric(10,2)          |           |          |
+ hire_date | date                   |           |          | CURRENT_DATE
+ dept_id   | integer                |           | not null |
+ name      | character varying(100) |           |          |
+ age       | integer                |           |          |
+Indexes:
+    "employees_pkey" PRIMARY KEY, btree (emp_id)
+Foreign-key constraints:
+    "employees_dept_id_fkey" FOREIGN KEY (dept_id) REFERENCES departments(dept_id) ON DELETE RESTRICT
+
+
+postgres=# INSERT INTO employees (name, age, position, salary, dept_id) VALUES
+postgres-# ('Ataibek Jakypov', 33, 'Salesmaker', 49000.00, 2);
+INSERT 0 1
+postgres=# -- Find departments with more than 2 employees
+postgres=# SELECT
+postgres-# dept_id, COUNT(*) AS employee_count
+postgres-# FROM employees
+postgres-# GROUP BY dept_id
+postgres-# HAVING COUNT(*) > 2;
+ dept_id | employee_count
+---------+----------------
+       2 |              3
+(1 row)
+
+
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age
+--------+-------------------+-----------+------------+---------+----------------------+-----
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45
+     10 | Designer          |  52000.00 | 2026-10-20 |       3 | Adel Kerimova        |  19
+     11 | Nurse             |  48000.00 | 2026-10-20 |       4 | Elnure Bekeshova     |  20
+     12 | SQL Developer     |  79000.00 | 2026-10-20 |       1 | Symbat Kanybekova    |  18
+     13 | Salesmaker        |  49000.00 | 2026-10-20 |       2 | Ataibek Jakypov      |  33
+(9 rows)
+
+
+postgres=# -- Find departments where the average employee salary exceeds 60,000
+postgres=# -- and which have 2 or more employees
+postgres=# SELECT
+postgres-# dept_id,
+postgres-# AVG(salary) AS avg_salary,
+postgres-# COUNT(*) AS employee_count
+postgres-# FROM employees
+postgres-# GROUP BY dept_id
+postgres-# HAVING AVG(salary) > 60000.00 AND COUNT(*) >= 2;
+ dept_id |     avg_salary     | employee_count
+---------+--------------------+----------------
+       4 | 86500.000000000000 |              2
+       2 | 99666.666666666667 |              3
+       1 | 90500.000000000000 |              2
+(3 rows)
+
+
+postgres=# --Window Functions vs Aggregate Functions
+postgres=# -- Aggregate function: Returns one row per department
+postgres=# SELECT dept_id, AVG(salary) AS dept_avg_salary
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id |  dept_avg_salary
+---------+--------------------
+       3 | 48500.000000000000
+       4 | 86500.000000000000
+       2 | 99666.666666666667
+       1 | 90500.000000000000
+(4 rows)
+
+
+postgres=# -- Window function: Returns all rows with department average
+postgres=# SELECT
+postgres-# emp_id,
+postgres-# name,
+postgres-# dept_id,
+postgres-# salary,
+postgres-# AVG(salary) OVER (PARTITION BY dept_id) AS dept_avg_salary
+postgres-# FROM employees;
+ emp_id |         name         | dept_id |  salary   |  dept_avg_salary
+--------+----------------------+---------+-----------+--------------------
+      1 | Kasiet Dokturbaeva   |       1 | 102000.00 | 90500.000000000000
+     12 | Symbat Kanybekova    |       1 |  79000.00 | 90500.000000000000
+      8 | Nurmira Kydyrmyshova |       2 | 200000.00 | 99666.666666666667
+     13 | Ataibek Jakypov      |       2 |  49000.00 | 99666.666666666667
+      6 | Akbiikem Dokturbaeva |       2 |  50000.00 | 99666.666666666667
+     10 | Adel Kerimova        |       3 |  52000.00 | 48500.000000000000
+      7 | Keremet Dokturbaeva  |       3 |  45000.00 | 48500.000000000000
+     11 | Elnure Bekeshova     |       4 |  48000.00 | 86500.000000000000
+      9 | Ulan Ishenabaev      |       4 | 125000.00 | 86500.000000000000
+(9 rows)
+
+
+postgres=# --Handling NULL Values
+postgres=# -- COUNT(*) includes NULLs, COUNT(column) excludes NULLs
+postgres=# SELECT
+postgres-# COUNT(*) AS total_rows,
+postgres-# COUNT(email) AS non_null_emails,
+postgres-# COUNT(*) - COUNT(email) AS null_emails
+postgres-# FROM students;
+ total_rows | non_null_emails | null_emails
+------------+-----------------+-------------
+          7 |               3 |           4
+(1 row)
+
+
+postgres=# -- COUNT(*) includes NULLs, COUNT(column) excludes NULLs
+postgres=# -- SUM, AVG, MAX, MIN ignore NULL values
+postgres=# ALTER TABLE employees ADD COLUMN bonus NUMERIC;
+ALTER TABLE
+postgres=# UPDATE employees
+postgres-# SET bonus = CASE
+postgres-#     WHEN emp_id IN (1, 8, 9) THEN 15000.00
+postgres-#     WHEN emp_id IN (6, 7) THEN 5000.00
+postgres-#     ELSE NULL
+postgres-# END;
+UPDATE 9
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age |  bonus
+--------+-------------------+-----------+------------+---------+----------------------+-----+----------
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18 | 15000.00
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18 |  5000.00
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21 |  5000.00
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45 | 15000.00
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45 | 15000.00
+     10 | Designer          |  52000.00 | 2026-10-20 |       3 | Adel Kerimova        |  19 |
+     11 | Nurse             |  48000.00 | 2026-10-20 |       4 | Elnure Bekeshova     |  20 |
+     12 | SQL Developer     |  79000.00 | 2026-10-20 |       1 | Symbat Kanybekova    |  18 |
+     13 | Salesmaker        |  49000.00 | 2026-10-20 |       2 | Ataibek Jakypov      |  33 |
+(9 rows)
+
+
+postgres=# SELECT
+postgres-# SUM(bonus) AS total_bonus,
+postgres-# AVG(bonus) AS avg_bonus,
+postgres-# COUNT(bonus) AS employees_with_bonus
+postgres-# FROM employees;
+ total_bonus |       avg_bonus        | employees_with_bonus
+-------------+------------------------+----------------------
+    55000.00 | 11000.0000000000000000 |                    5
+(1 row)
+
+
+postgres=# --Common Patterns and Best Practices
+postgres=# --1. Combining Multiple Aggregations
+postgres=# SELECT
+postgres-# dept_id,
+postgres-# COUNT(*) AS employee_count,
+postgres-# MIN(salary) AS min_salary,
+postgres-# MAX(salary) AS max_salary,
+postgres-# AVG(salary) AS avg_salary,
+postgres-# STDDEV(salary) AS salary_std_dev
+postgres-# FROM employees
+postgres-# GROUP BY dept_id
+postgres-# ORDER BY avg_salary DESC;
+ dept_id | employee_count | min_salary | max_salary |     avg_salary     |  salary_std_dev
+---------+----------------+------------+------------+--------------------+-------------------
+       2 |              3 |   49000.00 |  200000.00 | 99666.666666666667 |    86892.65408154
+       1 |              2 |   79000.00 |  102000.00 | 90500.000000000000 |    16263.45596729
+       4 |              2 |   48000.00 |  125000.00 | 86500.000000000000 |    54447.22215136
+       3 |              2 |   45000.00 |   52000.00 | 48500.000000000000 | 4949.747468305833
+(4 rows)
+
+
+postgres=# --2. Conditional Aggregation
+postgres=# -- Count employees by different criteria
+postgres=# SELECT
+postgres-# dept_id,
+postgres-# COUNT(*) AS total_employees,
+postgres-# COUNT(CASE WHEN salary > 50000 THEN 1 END) AS high_earners,
+postgres-# COUNT(CASE WHEN hire_date > '2023-10-16' THEN 1 END) AS recent_hires
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id | total_employees | high_earners | recent_hires
+---------+-----------------+--------------+--------------
+       3 |               2 |            1 |            2
+       4 |               2 |            1 |            2
+       2 |               3 |            1 |            3
+       1 |               2 |            2 |            2
+(4 rows)
+
+
+postgres=# --3. Percentage Calculations
+postgres=# -- Calculate percentage of total
+postgres=# SELECT dept_id,
+postgres-# COUNT(*) AS dept_count,
+postgres-# COUNT(*)::FLOAT / (SELECT COUNT(*) FROM employees) * 100 AS percentage
+postgres-# FROM employees
+postgres-# GROUP BY dept_id
+postgres-# ORDER BY percentage DESC;
+ dept_id | dept_count |    percentage
+---------+------------+-------------------
+       2 |          3 | 33.33333333333333
+       3 |          2 | 22.22222222222222
+       4 |          2 | 22.22222222222222
+       1 |          2 | 22.22222222222222
+(4 rows)
+
+
+postgres=#

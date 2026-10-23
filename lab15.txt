@@ -1,0 +1,347 @@
+postgres=# --Subqueries
+postgres=# --Find all employees whose salary is above the company average.
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age |  bonus   | manager_id
+--------+-------------------+-----------+------------+---------+----------------------+-----+----------+------------
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45 | 15000.00 |
+     10 | Designer          |  52000.00 | 2026-10-20 |       3 | Adel Kerimova        |  19 |          |
+     11 | Nurse             |  48000.00 | 2026-10-20 |       4 | Elnure Bekeshova     |  20 |          |
+     12 | SQL Developer     |  79000.00 | 2026-10-20 |       1 | Symbat Kanybekova    |  18 |          |
+     13 | Salesmaker        |  49000.00 | 2026-10-20 |       2 | Ataibek Jakypov      |  33 |          |
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45 | 15000.00 |
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18 | 15000.00 |          8
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21 |  5000.00 |          8
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18 |  5000.00 |          8
+(9 rows)
+
+
+postgres=# SELECT name, salary
+postgres-# FROM employees
+postgres-# WHERE salary > (
+postgres(#      SELECT AVG(salary)
+postgres(#      FROM employees
+postgres(# );
+         name         |  salary
+----------------------+-----------
+ Ulan Ishenabaev      | 125000.00
+ Nurmira Kydyrmyshova | 200000.00
+ Kasiet Dokturbaeva   | 102000.00
+(3 rows)
+
+
+postgres=# --Common Table Expressions (CTEs)
+postgres=# WITH customer_order_counts AS (
+postgres(#      SELECT customer_id, COUNT(order_id) AS total_orders
+postgres(#      FROM orders
+postgres(#      GROUP BY customer_id
+postgres(# )
+postgres-# SELECT customer_id, total_orders
+postgres-# FROM customer_order_counts
+postgres-# WHERE total_orders > 1;
+ customer_id | total_orders
+-------------+--------------
+           1 |            2
+(1 row)
+
+
+postgres=# --Recursive Queries
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age |  bonus   | manager_id
+--------+-------------------+-----------+------------+---------+----------------------+-----+----------+------------
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45 | 15000.00 |
+     10 | Designer          |  52000.00 | 2026-10-20 |       3 | Adel Kerimova        |  19 |          |
+     11 | Nurse             |  48000.00 | 2026-10-20 |       4 | Elnure Bekeshova     |  20 |          |
+     12 | SQL Developer     |  79000.00 | 2026-10-20 |       1 | Symbat Kanybekova    |  18 |          |
+     13 | Salesmaker        |  49000.00 | 2026-10-20 |       2 | Ataibek Jakypov      |  33 |          |
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45 | 15000.00 |
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18 | 15000.00 |          8
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21 |  5000.00 |          8
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18 |  5000.00 |          8
+(9 rows)
+
+
+postgres=# ALTER TABLE employees
+postgres-# ;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: ";")
+LINE 2: ;
+        ^
+postgres=# UPDATE employees
+postgres-# SET manager_id = 1
+postgres-# WHERE emp_id = 10, 12;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: ",")
+LINE 3: WHERE emp_id = 10, 12;
+                         ^
+postgres=# UPDATE employees
+postgres-# SET manager_id = 1
+postgres-# WHERE emp_id IN (10, 12);
+UPDATE 2
+postgres=# UPDATE employees
+postgres-# SET manager_id = 2
+postgres-# WHERE emp_id IN (9, 11);
+UPDATE 2
+postgres=# UPDATE employees
+postgres-# SET manager_id = 3
+postgres-# WHERE emp_id = 13;
+UPDATE 1
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age |  bonus   | manager_id
+--------+-------------------+-----------+------------+---------+----------------------+-----+----------+------------
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45 | 15000.00 |
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18 | 15000.00 |          8
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21 |  5000.00 |          8
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18 |  5000.00 |          8
+     10 | Designer          |  52000.00 | 2026-10-20 |       3 | Adel Kerimova        |  19 |          |          1
+     12 | SQL Developer     |  79000.00 | 2026-10-20 |       1 | Symbat Kanybekova    |  18 |          |          1
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45 | 15000.00 |          2
+     11 | Nurse             |  48000.00 | 2026-10-20 |       4 | Elnure Bekeshova     |  20 |          |          2
+     13 | Salesmaker        |  49000.00 | 2026-10-20 |       2 | Ataibek Jakypov      |  33 |          |          3
+(9 rows)
+
+
+postgres=# --Find the top-level manager (e.g., who has no manager)
+postgres=# WITH RECURSIVE org_chart AS (
+postgres(#      SELECT emp_id, name, manager_id
+postgres(#      FROM employees
+postgres(#      WHERE manager_id IS NULL
+postgres(#      UNION ALL
+postgres(#  -- Recursive: Find everyone who reports to the people already in the
+postgres(# --chart
+postgres(#      SELECT e.emp_id, e.name, e.manager_id
+postgres(#      FROM employees e
+postgres(#      INNER JOIN org_chart oc ON e.manager_id = oc.emp_id
+postgres(# )
+postgres-# SELECT * FROM org_chart;
+ emp_id |         name         | manager_id
+--------+----------------------+------------
+      8 | Nurmira Kydyrmyshova |
+      1 | Kasiet Dokturbaeva   |          8
+      6 | Akbiikem Dokturbaeva |          8
+      7 | Keremet Dokturbaeva  |          8
+     10 | Adel Kerimova        |          1
+     12 | Symbat Kanybekova    |          1
+(6 rows)
+
+
+postgres=# --Set Operations
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age |  bonus   | manager_id
+--------+-------------------+-----------+------------+---------+----------------------+-----+----------+------------
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45 | 15000.00 |
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18 | 15000.00 |          8
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21 |  5000.00 |          8
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18 |  5000.00 |          8
+     10 | Designer          |  52000.00 | 2026-10-20 |       3 | Adel Kerimova        |  19 |          |          1
+     12 | SQL Developer     |  79000.00 | 2026-10-20 |       1 | Symbat Kanybekova    |  18 |          |          1
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45 | 15000.00 |          2
+     11 | Nurse             |  48000.00 | 2026-10-20 |       4 | Elnure Bekeshova     |  20 |          |          2
+     13 | Salesmaker        |  49000.00 | 2026-10-20 |       2 | Ataibek Jakypov      |  33 |          |          3
+(9 rows)
+
+
+postgres=# SELECT * FROM departments;
+ dept_id |      dept_name       |    manager_name     |   budget
+---------+----------------------+---------------------+------------
+       3 | Marketing            | Alina Kulakova      |  400000.00
+       4 | Medical Centre       | Aibek Asanbekov     |  500000.00
+       5 | International Office | Meerim Bairova      |  800000.00
+       1 | Engineering          | Cabina Kenilchekova | 2000000.00
+       2 | Administrating       | Talgat Tulenbaev    | 1500000.00
+(5 rows)
+
+
+postgres=# SELECT * FROM students;
+ student_id | first_name |  last_name   |      email      | enrollment_date | birth_date
+------------+------------+--------------+-----------------+-----------------+------------
+          8 | Selima     | Askarbekova  |                 | 2026-10-20      | 2007-09-09
+          9 | Nazima     | Sabydasheva  |                 | 2026-10-20      | 2007-08-17
+         10 | Beguy      | Mukanbetova  |                 | 2026-10-20      | 2007-04-23
+         11 | Aielina    | Urkalieva    |                 | 2026-10-20      | 2008-02-02
+         12 | Sevara     | Kasymova     | ks14003@auca.kg | 2026-10-20      | 2007-08-15
+         13 | Medina     | Mamanova     | mm14014@auca.kg | 2026-10-20      | 2006-07-14
+         14 | Adinai     | Muhtarbekova | ma14017@auca.kg | 2026-10-20      | 2008-04-08
+(7 rows)
+
+
+postgres=# SELECT * FROM members;
+ member_id | first_name | last_name  |      email       |     phone     | membership_date
+-----------+------------+------------+------------------+---------------+-----------------
+         1 | Aidemi     | Kerimova   | aidemi@auca.kg   | +996555123456 | 2026-10-11
+         2 | Bekzat     | Urmanbetov | bekzat@gmail.com | +996700987654 | 2026-10-11
+(2 rows)
+
+
+postgres=# SELECT * FROM customers;
+ customer_id |  name   |         email
+-------------+---------+------------------------
+           1 | Aida    | akaralaeva@gmail.com
+           2 | Aizada  | babalieva92@gmail.com
+           3 | Altyn   | drnestangold@gmail.com
+           4 | Akylbek | aa14009@auca.kg
+(4 rows)
+
+postgres=# --UNION
+postgres=# SELECT email FROM customers WHERE email IS NOT NULL
+postgres-# UNION
+postgres-# SELECT email FROM members WHERE email IS NOT NULL
+postgres-# UNION
+postgres-# SELECT email FROM students WHERE email IS NOT NULL;
+         email
+------------------------
+ drnestangold@gmail.com
+ bekzat@gmail.com
+ aa14009@auca.kg
+ babalieva92@gmail.com
+ aidemi@auca.kg
+ ks14003@auca.kg
+ akaralaeva@gmail.com
+ ma14017@auca.kg
+ mm14014@auca.kg
+(9 rows)
+
+postgres=# --EXPECT
+postgres=# SELECT name, salary, position FROM employees WHERE salary > 50000
+postgres-# EXPECT
+postgres-# ;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "EXPECT")
+LINE 2: EXPECT
+        ^
+postgres=# --EXCEPT
+postgres=#  SELECT name, salary, position FROM employees WHERE salary > 50000
+postgres-# EXCEPT
+postgres-# SELECT name, salary, position FROM employees WHERE bonus IS NOT NULL;
+       name        |  salary  |   position
+-------------------+----------+---------------
+ Adel Kerimova     | 52000.00 | Designer
+ Symbat Kanybekova | 79000.00 | SQL Developer
+(2 rows)
+
+
+postgres=# --INTERSECT
+postgres=# SELECT name AS person_name FROM customers
+postgres-# INTERSECT
+postgres-# SELECT first_name AS person_name FROM members;
+ person_name
+-------------
+(0 rows)
+
+
+postgres=# INSERT INTO customers(name) VALUES
+postgres-# ('Bekzat');
+INSERT 0 1
+postgres=# SELECT name AS person_name FROM customers
+postgres-#  INTERSECT
+postgres-#  SELECT first_name AS person_name FROM members;
+ person_name
+-------------
+ Bekzat
+(1 row)
+postgres=# --Window Functions & Partitioning
+postgres=# SELECT
+postgres-#      name,
+postgres-#      dept_id,
+postgres-#      salary,
+postgres-#      RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS
+postgres-# dept_salary_rank
+postgres-# FROM employees;
+         name         | dept_id |  salary   | dept_salary_rank
+----------------------+---------+-----------+------------------
+ Kasiet Dokturbaeva   |       1 | 102000.00 |                1
+ Symbat Kanybekova    |       1 |  79000.00 |                2
+ Nurmira Kydyrmyshova |       2 | 200000.00 |                1
+ Akbiikem Dokturbaeva |       2 |  50000.00 |                2
+ Ataibek Jakypov      |       2 |  49000.00 |                3
+ Adel Kerimova        |       3 |  52000.00 |                1
+ Keremet Dokturbaeva  |       3 |  45000.00 |                2
+ Ulan Ishenabaev      |       4 | 125000.00 |                1
+ Elnure Bekeshova     |       4 |  48000.00 |                2
+(9 rows)
+
+
+postgres=# --Pivot and Unpivot Operations
+postgres=# --Pivoting with Conditional Aggregation (Most Common):
+postgres=# SELECT
+postgres-#      SUM(CASE WHEN dept_id = 1 THEN salary ELSE 0 END) AS engineering_sal,
+postgres-#      SUM(CASE WHEN dept_id = 2 THEN salary ELSE 0 END) AS admin_sal
+postgres-#      ,SUM(CASE WHEN dept_id = 3 THEN salary ELSE 0 END) AS marketing_sal,
+postgres-#      SUM(CASE WHEN dept_id = 4 THEN salary ELSE 0 END) AS medical_sal
+postgres-# FROM employees;
+ engineering_sal | admin_sal | marketing_sal | medical_sal
+-----------------+-----------+---------------+-------------
+       181000.00 | 299000.00 |      97000.00 |   173000.00
+(1 row)
+
+
+postgres=# --Unpivoting with UNION ALL:
+postgres=# WITH pivoted_salaries AS (
+postgres(#     SELECT
+postgres(#         SUM(CASE WHEN dept_id = 1 THEN salary ELSE 0 END) AS engineering_sal,
+postgres(#         SUM(CASE WHEN dept_id = 2 THEN salary ELSE 0 END) AS admin_sal,
+postgres(#         SUM(CASE WHEN dept_id = 3 THEN salary ELSE 0 END) AS marketing_sal,
+postgres(#         SUM(CASE WHEN dept_id = 4 THEN salary ELSE 0 END) AS medical_sal
+postgres(#     FROM employees
+postgres(# )
+postgres-# SELECT 'Engineering' AS department_name, engineering_sal AS total_salary FROM pivoted_salaries
+postgres-# UNION ALL
+postgres-# SELECT 'Administrating' AS department_name, admin_sal AS total_salary FROM pivoted_salaries
+postgres-# UNION ALL
+postgres-# SELECT 'Marketing' AS department_name, marketing_sal AS total_salary FROM pivoted_salaries
+postgres-# UNION ALL
+postgres-# SELECT 'Medical Centre' AS department_name, medical_sal AS total_salary FROM pivoted_salaries;
+ department_name | total_salary
+-----------------+--------------
+ Engineering     |    181000.00
+ Administrating  |    299000.00
+ Marketing       |     97000.00
+ Medical Centre  |    173000.00
+(4 rows)
+
+
+postgres=# --Complex Filtering and Sorting
+postgres=# --Filtering:
+postgres=# SELECT
+postgres-#      name, age, salary,
+postgres-#      SUM(salary) OVER (PARTITION BY dept_id) AS total_dept_salary,
+postgres-#      AVG(salary) FILTER (WHERE age > 20) OVER() AS avg_salary_over_20
+postgres-# FROM employees;
+         name         | age |  salary   | total_dept_salary | avg_salary_over_20
+----------------------+-----+-----------+-------------------+---------------------
+ Kasiet Dokturbaeva   |  18 | 102000.00 |         181000.00 | 106000.000000000000
+ Symbat Kanybekova    |  18 |  79000.00 |         181000.00 | 106000.000000000000
+ Nurmira Kydyrmyshova |  45 | 200000.00 |         299000.00 | 106000.000000000000
+ Akbiikem Dokturbaeva |  21 |  50000.00 |         299000.00 | 106000.000000000000
+ Ataibek Jakypov      |  33 |  49000.00 |         299000.00 | 106000.000000000000
+ Keremet Dokturbaeva  |  18 |  45000.00 |          97000.00 | 106000.000000000000
+ Adel Kerimova        |  19 |  52000.00 |          97000.00 | 106000.000000000000
+ Ulan Ishenabaev      |  45 | 125000.00 |         173000.00 | 106000.000000000000
+ Elnure Bekeshova     |  20 |  48000.00 |         173000.00 | 106000.000000000000
+(9 rows)
+
+
+postgres=# --Sorting:
+postgres=# --Custom Sorting with CASE
+postgres=# SELECT name, position, salary
+postgres-# FROM employees
+postgres-# ORDER BY
+postgres-#      CASE position
+postgres-#              WHEN 'President' THEN 1
+postgres-#              WHEN 'Manager' THEN 2
+postgres-#              WHEN 'Software Engineer' THEN 3
+postgres-#              WHEN 'SQL Developer' THEN 4
+postgres-#              ELSE 5
+postgres-#      END,
+postgres-#      salary DESC;
+         name         |     position      |  salary
+----------------------+-------------------+-----------
+ Nurmira Kydyrmyshova | President         | 200000.00
+ Keremet Dokturbaeva  | Manager           |  45000.00
+ Kasiet Dokturbaeva   | Software Engineer | 102000.00
+ Symbat Kanybekova    | SQL Developer     |  79000.00
+ Ulan Ishenabaev      | Doctor            | 125000.00
+ Adel Kerimova        | Designer          |  52000.00
+ Akbiikem Dokturbaeva | Adviser           |  50000.00
+ Ataibek Jakypov      | Salesmaker        |  49000.00
+ Elnure Bekeshova     | Nurse             |  48000.00
+(9 rows)
+
+
+postgres=#

@@ -1,0 +1,662 @@
+postgres=# --Types of Joins
+postgres=# --1. INNER JOIN
+postgres=# CREATE TABLE customers (
+postgres(#     customer_id SERIAL PRIMARY KEY,
+postgres(#     name VARCHAR(100),
+postgres(#     email VARCHAR(100)
+postgres(# );
+CREATE TABLE
+postgres=# CREATE TABLE orders (
+postgres(#     order_id SERIAL PRIMARY KEY,
+postgres(#     customer_id INTEGER REFERENCES customers(customer_id),
+postgres(#     order_date DATE,
+postgres(#     total_amount DECIMAL(10,2)
+postgres(# );
+CREATE TABLE
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-#  FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+ name | email | order_date | total_amount
+------+-------+------------+--------------
+(0 rows)
+postgres=# INSERT INTO customers(name, email) VALUES
+postgres-# ('Aida', 'akaralaeva@gmail.com'), ('Aizada', 'babalieva92@gmail.com');
+INSERT 0 2
+postgres=# INSERT INTO orders(total_amount, customer_id) VALUES
+postgres-# (1507.99, 1);
+INSERT 0 1
+postgres=# INSERT INTO orders(total_amount, customer_id) VALUES
+postgres-# (3086.67, 2);
+INSERT 0 1
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+  name  |         email         | order_date | total_amount
+--------+-----------------------+------------+--------------
+ Aida   | akaralaeva@gmail.com  |            |      1507.99
+ Aizada | babalieva92@gmail.com |            |      3086.67
+(2 rows)
+
+
+postgres=# INSERT INTO orders (order_date) VALUES
+postgres-# ('2026-07-24');
+INSERT 0 1
+postgres=#  INSERT INTO orders (order_date, customer_id) VALUES
+postgres-# ('2026-07-24', 1), ('2026-10-02', 2);
+INSERT 0 2
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+  name  |         email         | order_date | total_amount
+--------+-----------------------+------------+--------------
+ Aida   | akaralaeva@gmail.com  |            |      1507.99
+ Aizada | babalieva92@gmail.com |            |      3086.67
+ Aida   | akaralaeva@gmail.com  | 2026-07-24 |
+ Aizada | babalieva92@gmail.com | 2026-10-02 |
+(4 rows)
+postgres=# UPDATE orders
+postgres-# SET order_date = NULL
+postgres-# WHERE order_id = 4;
+UPDATE 1
+postgres=# UPDATE orders
+postgres-# SET order_date = NULL
+postgres-# WHERE order_id = 3;
+UPDATE 1
+postgres=# SELECT * FROM orders;
+ order_id | customer_id | order_date | total_amount
+----------+-------------+------------+--------------
+        1 |           1 |            |      1507.99
+        2 |           2 |            |      3086.67
+        5 |           2 | 2026-10-02 |
+        4 |           1 |            |
+        3 |             |            |
+(5 rows)
+
+
+postgres=# UPDATE orders
+postgres-# SET order_date = NULL
+postgres-# WHERE order_id = 5;
+UPDATE 1
+postgres=# UPDATE orders
+postgres-# SET order_date = '2026-10-02'
+postgres-# WHERE order_id = 2;
+UPDATE 1
+postgres=# UPDATE orders
+postgres-# SET order_date = '2026-07-24'
+postgres-# WHERE order_id = 1;
+UPDATE 1
+postgres=# SELECT * FROM orders;
+ order_id | customer_id | order_date | total_amount
+----------+-------------+------------+--------------
+        4 |           1 |            |
+        3 |             |            |
+        5 |           2 |            |
+        2 |           2 | 2026-10-02 |      3086.67
+        1 |           1 | 2026-07-24 |      1507.99
+(5 rows)
+
+
+postgres=# DELETE FROM orders
+postgres-# WHERE order_id IN (3, 4, 5);
+DELETE 3
+postgres=# SELECT * FROM orders;
+ order_id | customer_id | order_date | total_amount
+----------+-------------+------------+--------------
+        2 |           2 | 2026-10-02 |      3086.67
+        1 |           1 | 2026-07-24 |      1507.99
+(2 rows)
+
+
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+  name  |         email         | order_date | total_amount
+--------+-----------------------+------------+--------------
+ Aizada | babalieva92@gmail.com | 2026-10-02 |      3086.67
+ Aida   | akaralaeva@gmail.com  | 2026-07-24 |      1507.99
+(2 rows)
+
+
+postgres=# --2. LEFT JOIN (LEFT OUTER JOIN)
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# LEFT JOIN orders o ON c.customer_id = o.customer_id;
+  name  |         email         | order_date | total_amount
+--------+-----------------------+------------+--------------
+ Aizada | babalieva92@gmail.com | 2026-10-02 |      3086.67
+ Aida   | akaralaeva@gmail.com  | 2026-07-24 |      1507.99
+(2 rows)
+
+postgres=# INSERT INTO customers(name, email) VALUES
+postgres-# ('Altyn', 'drnestangold@gmail.com');
+INSERT 0 1
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# LEFT JOIN orders o ON c.customer_id = o.customer_id;
+  name  |         email          | order_date | total_amount
+--------+------------------------+------------+--------------
+ Aizada | babalieva92@gmail.com  | 2026-10-02 |      3086.67
+ Aida   | akaralaeva@gmail.com   | 2026-07-24 |      1507.99
+ Altyn  | drnestangold@gmail.com |            |
+(3 rows)
+
+
+postgres=#
+postgres=# --3. RIGHT JOIN (RIGHT OUTER JOIN)
+postgres=# INSERT INTO orders(order_date, total_amount, customer_id) VALUES
+postgres-# ('2026-10-23', 2997.00, 4);
+DzD"D~D`DsD?:  INSERT D,D»D, UPDATE D² Ñ,D°D±D»D,Ñ+Dµ "orders" D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ D²D½DµÑ^D½DµD3D_ DºD»ÑZÑ╪D° "orders_customer_id_fkey"
+DETAIL:  DsD»ÑZÑ╪ (customer_id)=(4) D_Ñ,Ñ?ÑƒÑ,Ñ?Ñ,D²ÑƒDµÑ, D² Ñ,D°D±D»D,Ñ+Dµ "customers".
+postgres=# INSERT INTO orders (order_date, total_amount)
+postgres-# VALUES ('2026-10-23', 2997.00);
+INSERT 0 1
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# RIGHT JOIN orders o ON c.customer_id = o.customer_id;
+  name  |         email         | order_date | total_amount
+--------+-----------------------+------------+--------------
+ Aizada | babalieva92@gmail.com | 2026-10-02 |      3086.67
+ Aida   | akaralaeva@gmail.com  | 2026-07-24 |      1507.99
+        |                       | 2026-10-23 |      2997.00
+(3 rows)
+
+
+postgres=# --4. FULL OUTER JOIN
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# FULL OUTER JOIN orders o ON c.customer_id = o.customer_id;
+  name  |         email          | order_date | total_amount
+--------+------------------------+------------+--------------
+ Aizada | babalieva92@gmail.com  | 2026-10-02 |      3086.67
+ Aida   | akaralaeva@gmail.com   | 2026-07-24 |      1507.99
+        |                        | 2026-10-23 |      2997.00
+ Altyn  | drnestangold@gmail.com |            |
+(4 rows)
+
+
+postgres=#
+postgres=# --5. CROSS JOIN
+postgres=# \d products
+                                           Table "public.products"
+    Column    |          Type          | Collation | Nullable |                   Default
+--------------+------------------------+-----------+----------+----------------------------------------------
+ product_id   | integer                |           | not null | nextval('products_product_id_seq'::regclass)
+ product_name | character varying(100) |           | not null |
+ price        | numeric(10,2)          |           |          |
+Indexes:
+    "products_pkey" PRIMARY KEY, btree (product_id)
+
+
+postgres=# SELECT * FROM products;
+ product_id |    product_name     | price
+------------+---------------------+--------
+          1 | Database Textbook   |  44.99
+          2 | MackBook Neo A18Pro | 870.00
+(2 rows)
+
+
+postgres=# SELECT c.name, p.product_name
+postgres-# FROM customers c
+postgres-# CROSS JOIN products p;
+  name  |    product_name
+--------+---------------------
+ Aida   | Database Textbook
+ Aizada | Database Textbook
+ Altyn  | Database Textbook
+ Aida   | MackBook Neo A18Pro
+ Aizada | MackBook Neo A18Pro
+ Altyn  | MackBook Neo A18Pro
+(6 rows)
+
+
+postgres=# --Advanced Join Techniques
+postgres=# CREATE TABLE order_items(
+postgres(# order_item_id SERIAL PRIMARY KEY,
+postgres(#     order_id INTEGER REFERENCES orders(order_id) ON DELETE CASCADE,
+postgres(#     product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
+postgres(# );
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: ")")
+LINE 5: );
+        ^
+postgres=# \d order_items
+Did not find any relation named "order_items".
+postgres=#  CREATE TABLE order_items(
+postgres(# order_item_id SERIAL PRIMARY KEY,
+postgres(#     order_id INTEGER REFERENCES orders(order_id) ON DELETE CASCADE,
+postgres(#     product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE);
+CREATE TABLE
+postgres=# INSERT INTO order_items(order_id, product_id) VALUES
+postgres-# (1, 1), (2, 1), (3, 1), (3, 2);
+DzD"D~D`DsD?:  INSERT D,D»D, UPDATE D² Ñ,D°D±D»D,Ñ+Dµ "order_items" D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ D²D½DµÑ^D½DµD3D_ DºD»ÑZÑ╪D° "order_items_order_id_fkey"
+DETAIL:  DsD»ÑZÑ╪ (order_id)=(3) D_Ñ,Ñ?ÑƒÑ,Ñ?Ñ,D²ÑƒDµÑ, D² Ñ,D°D±D»D,Ñ+Dµ "orders".
+postgres=# INSERT INTO order_items (order_id, product_id) VALUES
+postgres-# (1, 1), (2, 1), (2, 2);
+INSERT 0 3
+postgres=# SELECT * FROM order_items;
+ order_item_id | order_id | product_id
+---------------+----------+------------
+             5 |        1 |          1
+             6 |        2 |          1
+             7 |        2 |          2
+(3 rows)
+
+
+postgres=# --Multiple Table Joins
+postgres=# UPDATE TABLE order_items
+postgres-# ADD COLUMN quantity;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "TABLE")
+LINE 1: UPDATE TABLE order_items
+               ^
+postgres=# UPDATE order_items
+postgres-# ADD COLUMN quantity;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "COLUMN")
+LINE 2: ADD COLUMN quantity;
+            ^
+postgres=# DROP TABLE order_items;
+DROP TABLE
+postgres=# CREATE TABLE IF NOT EXISTS order_items (
+postgres(#     order_item_id SERIAL PRIMARY KEY,
+postgres(#     order_id INTEGER REFERENCES orders(order_id) ON DELETE CASCADE,
+postgres(#     product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
+postgres(#     quantity INTEGER NOT NULL
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO order_items (order_id, product_id, quantity) VALUES
+postgres-# (1, 1, 1), (2, 1, 1), (2, 2, 2);
+INSERT 0 3
+postgres=# SELECT c.name, o.order_date, oi.quantity, p.product_name, p.price
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id
+postgres-# INNER JOIN order_items oi ON o.order_id = oi.order_id
+postgres-# INNER JOIN products p ON oi.product_id = p.product_id;
+  name  | order_date | quantity |    product_name     | price
+--------+------------+----------+---------------------+--------
+ Aida   | 2026-07-24 |        1 | Database Textbook   |  44.99
+ Aizada | 2026-10-02 |        1 | Database Textbook   |  44.99
+ Aizada | 2026-10-02 |        2 | MackBook Neo A18Pro | 870.00
+(3 rows)
+
+
+postgres=# --Self Joins
+postgres=# ALTER TABLE employees ADD COLUMN manager_id INTEGER;
+ALTER TABLE
+postgres=# UPDATE employees SET manager_id = NULL WHERE emp_id = 8;
+UPDATE 1
+postgres=# UPDATE employees SET manager_id = 8 WHERE emp_id IN (1, 6, 7);
+UPDATE 3
+postgres=# SELECT e1.name AS employees, e2.name AS manager
+postgres-# FROM employees e1
+postgres-# LEFT JOIN employees e2 ON e1.manager_id = e2.manager_id;
+      employees       |       manager
+----------------------+----------------------
+ Ulan Ishenabaev      |
+ Adel Kerimova        |
+ Elnure Bekeshova     |
+ Symbat Kanybekova    |
+ Ataibek Jakypov      |
+ Nurmira Kydyrmyshova |
+ Kasiet Dokturbaeva   | Keremet Dokturbaeva
+ Kasiet Dokturbaeva   | Akbiikem Dokturbaeva
+ Kasiet Dokturbaeva   | Kasiet Dokturbaeva
+ Akbiikem Dokturbaeva | Keremet Dokturbaeva
+ Akbiikem Dokturbaeva | Akbiikem Dokturbaeva
+ Akbiikem Dokturbaeva | Kasiet Dokturbaeva
+ Keremet Dokturbaeva  | Keremet Dokturbaeva
+ Keremet Dokturbaeva  | Akbiikem Dokturbaeva
+ Keremet Dokturbaeva  | Kasiet Dokturbaeva
+(15 rows)
+
+
+postgres=# --Join with Conditions
+postgres=# INSERT INTO orders(order_date, total_amount) VALUES
+postgres-# ('2023-08-18', 3402.97), ('2025-05-25', 20.00);
+INSERT 0 2
+postgres=# SELECT c.name, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id
+postgres-# WHERE o.order_date >= '2024-01-01'
+postgres-# AND o.total_amount > 100;
+  name  | order_date | total_amount
+--------+------------+--------------
+ Aizada | 2026-10-02 |      3086.67
+ Aida   | 2026-07-24 |      1507.99
+(2 rows)
+
+
+postgres=#
+postgres=# SELECT * FROM orders;
+ order_id | customer_id | order_date | total_amount
+----------+-------------+------------+--------------
+        2 |           2 | 2026-10-02 |      3086.67
+        1 |           1 | 2026-07-24 |      1507.99
+        7 |             | 2026-10-23 |      2997.00
+        8 |             | 2023-08-18 |      3402.97
+        9 |             | 2025-05-25 |        20.00
+(5 rows)
+
+
+postgres=# UPDATE orders
+postgres-# SET customer_id = 1
+postgres-# WHERE order_id = 8;
+UPDATE 1
+postgres=# UPDATE orders
+postgres-# SET customer_id = 3
+postgres-# WHERE order_id = 9;
+UPDATE 1
+postgres=# SELECT * FROM orders;
+ order_id | customer_id | order_date | total_amount
+----------+-------------+------------+--------------
+        2 |           2 | 2026-10-02 |      3086.67
+        1 |           1 | 2026-07-24 |      1507.99
+        7 |             | 2026-10-23 |      2997.00
+        8 |           1 | 2023-08-18 |      3402.97
+        9 |           3 | 2025-05-25 |        20.00
+(5 rows)
+
+
+postgres=# SELECT c.name, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id
+postgres-# WHERE o.order_date >= '2024-01-01'
+postgres-# AND o.total_amount > 100;
+  name  | order_date | total_amount
+--------+------------+--------------
+ Aizada | 2026-10-02 |      3086.67
+ Aida   | 2026-07-24 |      1507.99
+(2 rows)
+
+
+postgres=#
+postgres=# --Working with Different Relationship Types
+postgres=# SELECT * FROM users;
+ user_id | username |      email      |         created_at
+---------+----------+-----------------+----------------------------
+       1 | Aidemi   | ka14051@auca.kg | 2026-10-11 03:12:58.854247
+(1 row)
+
+
+postgres=# SELECT * FROM user_profiles;
+ profile_id | user_id | first_name | last_name |                          bio                           | profile_picture_url
+------------+---------+------------+-----------+--------------------------------------------------------+---------------------
+          1 |       1 | Aidemi     | Kerimova  | Business Administrator seeking for career developments |
+(1 row)
+
+
+postgres=# INSERT INTO users (username, email) VALUES
+postgres-# ('Keremet', 'asanbaeva@krl.com');
+INSERT 0 1
+postgres=# SELECT * FROM users;
+ user_id | username |       email       |         created_at
+---------+----------+-------------------+----------------------------
+       1 | Aidemi   | ka14051@auca.kg   | 2026-10-11 03:12:58.854247
+       3 | Keremet  | asanbaeva@krl.com | 2026-10-23 03:18:39.78909
+(2 rows)
+
+
+postgres=# INSERT INTO user_profiles(first_name, last_name, bio, user_id)
+postgres-# VALUES ('Keremet', 'Asanbaeva', 'AI developer looking for job oportunities', 3);
+INSERT 0 1
+postgres=# --One-to-One Relationships
+postgres=# SELECT u.username, up.first_name, up.last_name, up.bio
+postgres-# FROM users u
+postgres-# LEFT JOIN user_profiles up ON u.user_id = up.user_id;
+ username | first_name | last_name |                          bio
+----------+------------+-----------+--------------------------------------------------------
+ Aidemi   | Aidemi     | Kerimova  | Business Administrator seeking for career developments
+ Keremet  | Keremet    | Asanbaeva | AI developer looking for job oportunities
+(2 rows)
+
+
+postgres=# --One-to-Many Relationships
+postgres=# \d books
+                                           Table "public.books"
+      Column      |          Type          | Collation | Nullable |                Default
+------------------+------------------------+-----------+----------+----------------------------------------
+ book_id          | integer                |           | not null | nextval('books_book_id_seq'::regclass)
+ title            | character varying(200) |           | not null |
+ isbn             | character varying(13)  |           |          |
+ publication_year | integer                |           |          |
+ available_copies | integer                |           |          | 1
+Indexes:
+    "books_pkey" PRIMARY KEY, btree (book_id)
+    "books_isbn_key" UNIQUE CONSTRAINT, btree (isbn)
+Referenced by:
+    TABLE "book_authors" CONSTRAINT "book_authors_book_id_fkey" FOREIGN KEY (book_id) REFERENCES books(book_id)
+    TABLE "loans" CONSTRAINT "loans_book_id_fkey" FOREIGN KEY (book_id) REFERENCES books(book_id)
+
+
+postgres=# \d authors
+                                         Table "public.authors"
+   Column   |         Type          | Collation | Nullable |                  Default
+------------+-----------------------+-----------+----------+--------------------------------------------
+ author_id  | integer               |           | not null | nextval('authors_author_id_seq'::regclass)
+ first_name | character varying(50) |           | not null |
+ last_name  | character varying(50) |           | not null |
+ birth_date | date                  |           |          |
+Indexes:
+    "authors_pkey" PRIMARY KEY, btree (author_id)
+Referenced by:
+    TABLE "book_authors" CONSTRAINT "book_authors_author_id_fkey" FOREIGN KEY (author_id) REFERENCES authors(author_id)
+
+
+postgres=# SELECT * FROM books;
+ book_id |        title         |     isbn      | publication_year | available_copies
+---------+----------------------+---------------+------------------+------------------
+       1 | War and Peace        | 9780199232765 |             1869 |                3
+       2 | Crime and Punishment | 9780140449136 |             1866 |                2
+       3 | 1984                 | 9780451524935 |             1949 |                5
+(3 rows)
+
+
+postgres=# SELECT * FROM authors;
+ author_id | first_name | last_name  | birth_date
+-----------+------------+------------+------------
+         1 | Leo        | Tolstoy    | 1828-09-09
+         2 | Fedor      | Dostoevsky | 1821-11-11
+         3 | George     | Orwell     | 1903-06-25
+(3 rows)
+
+
+postgres=# ALTER TABLE books ADD COLUMN author_id INTEGER REFERENCES authors(author_id);
+ALTER TABLE
+postgres=# UPDATE books SET author_id = 1 WHERE book_id = 1;
+UPDATE 1
+postgres=# UPDATE books SET author_id = 2 WHERE book_id = 2;
+UPDATE 1
+postgres=# UPDATE books SET author_id = 3 WHERE book_id = 3;
+UPDATE 1
+postgres=# --One-to-Many Relationships
+postgres=# SELECT a.first_name, a.last_name, b.title, b.publication_year
+postgres-# FROM authors a
+postgres-# INNER JOIN books b ON a.author_id = b.author_id
+postgres-# ORDER BY a.last_name, b.publication_year;
+ first_name | last_name  |        title         | publication_year
+------------+------------+----------------------+------------------
+ Fedor      | Dostoevsky | Crime and Punishment |             1866
+ George     | Orwell     | 1984                 |             1949
+ Leo        | Tolstoy    | War and Peace        |             1869
+(3 rows)
+
+
+postgres=# --Many-to-Many Relationships
+postgres=# SELECT * FROM students;
+ student_id | first_name |  last_name   |      email      | enrollment_date | birth_date
+------------+------------+--------------+-----------------+-----------------+------------
+          8 | Selima     | Askarbekova  |                 | 2026-10-20      | 2007-09-09
+          9 | Nazima     | Sabydasheva  |                 | 2026-10-20      | 2007-08-17
+         10 | Beguy      | Mukanbetova  |                 | 2026-10-20      | 2007-04-23
+         11 | Aielina    | Urkalieva    |                 | 2026-10-20      | 2008-02-02
+         12 | Sevara     | Kasymova     | ks14003@auca.kg | 2026-10-20      | 2007-08-15
+         13 | Medina     | Mamanova     | mm14014@auca.kg | 2026-10-20      | 2006-07-14
+         14 | Adinai     | Muhtarbekova | ma14017@auca.kg | 2026-10-20      | 2008-04-08
+(7 rows)
+
+
+postgres=# SELECT * FROM enrollments;
+DzD"D~D`DsD?:  D_Ñ,D½D_Ñ^DµD½D,Dµ "enrollments" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,
+LINE 1: SELECT * FROM enrollments;
+                      ^
+postgres=# \dt
+                 List of tables
+ Schema |        Name         | Type  |  Owner
+--------+---------------------+-------+----------
+ public | authors             | table | postgres
+ public | blog_posts          | table | postgres
+ public | book_authors        | table | postgres
+ public | books               | table | postgres
+ public | comments            | table | postgres
+ public | courses             | table | postgres
+ public | customers           | table | postgres
+ public | departments         | table | postgres
+ public | employees           | table | postgres
+ public | loans               | table | postgres
+ public | members             | table | postgres
+ public | order_items         | table | postgres
+ public | orders              | table | postgres
+ public | products            | table | postgres
+ public | student_enrollments | table | postgres
+ public | students            | table | postgres
+ public | transactions        | table | postgres
+ public | user_profiles       | table | postgres
+ public | users               | table | postgres
+(19 rows)
+
+
+postgres=# SELECT * FROM  student_enrollments;
+ enrollment_id | student_id | course_id | enrollment_date | grade
+---------------+------------+-----------+-----------------+-------
+(0 rows)
+
+
+postgres=# SELECT * FROM courses;
+ course_id | course_code |          course_name           | credits |   instructor
+-----------+-------------+--------------------------------+---------+-----------------
+         1 | COM-122     | Introduction to Programming    |       6 | Pr.Toksaitov
+         2 | COM-123     | Principles of Computing System |       6 | Dr.Osmonov
+         3 | KLL-123     | Kyrgyz Language and Literature |       3 | Dr.Karbaralieva
+(3 rows)
+
+
+postgres=# INSERT INTO student_enrollments (student_id, course_id, enrollment_date, grade) VALUES
+postgres-# (8, 1, '2026-09-15', 'A+');
+INSERT 0 1
+postgres=# INSERT INTO student_enrollments (student_id, course_id, enrollment_date, grade) VALUES
+postgres-#  (8, 2, '2026-02-14', 'A-'), (13, 1, '2025-08-27', 'A'), (14, 2, '2026-01-11', 'A'), (11, 3, '2025-08-29', 'A+');
+INSERT 0 4
+postgres=# SELECT s.name, c.course_name, e.enrollment_date, e.grade
+postgres-# FROM students s
+postgres-# INNER JOIN student_enrollments e ON s.student_id = e.student_id
+postgres-# INNER JOIN courses c ON e.course_id = c.course_id
+postgres-# WHERE e.grade IS NOT NULL
+postgres-# ORDER BY s.name, c.course_name;
+DzD"D~D`DsD?:  Ñ?Ñ,D_D»D±DµÑ+ s.name D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,
+LINE 1: SELECT s.name, c.course_name, e.enrollment_date, e.grade
+               ^
+postgres=# SELECT s.first_name, c.course_name, e.enrollment_date, e.grade
+postgres-# FROM students s
+postgres-# INNER JOIN student_enrollments e ON s.student_id = e.student_id
+postgres-# INNER JOIN courses c ON e.course_id = c.course_id
+postgres-# WHERE e.grade IS NOT NULL
+postgres-# ORDER BY s.first_name, c.course_name;
+ first_name |          course_name           | enrollment_date | grade
+------------+--------------------------------+-----------------+-------
+ Adinai     | Principles of Computing System | 2026-01-11      | A
+ Aielina    | Kyrgyz Language and Literature | 2025-08-29      | A+
+ Medina     | Introduction to Programming    | 2025-08-27      | A
+ Selima     | Introduction to Programming    | 2026-09-15      | A+
+ Selima     | Principles of Computing System | 2026-02-14      | A-
+(5 rows)
+postgres=# --Performance Considerations
+postgres=# --Use Indexes
+postgres=# CREATE INDEX idx_orders_customer_id ON orders(customer_id);
+CREATE INDEX
+postgres=# CREATE INDEX idx_order_items_order_id ON order_items(order_id);
+CREATE INDEX
+postgres=# CREATE INDEX idx_order_items_product_id ON order_items(product_id);
+CREATE INDEX
+postgres=# --Table Aliases
+postgres=# SELECT c.name, o.order_date
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+  name  | order_date
+--------+------------
+ Aida   | 2023-08-18
+ Aida   | 2026-07-24
+ Aizada | 2026-10-02
+ Altyn  | 2025-05-25
+(4 rows)
+
+
+postgres=#
+postgres=# --Common Pitfalls and How to Avoid Them
+postgres=# --1. Cartesian Products
+postgres=# -- Wrong (Cartesian product)
+postgres=# SELECT c.name, o.order_date
+postgres-# FROM customers c, orders o;
+  name  | order_date
+--------+------------
+ Aida   | 2026-10-02
+ Aida   | 2026-07-24
+ Aida   | 2026-10-23
+ Aida   | 2023-08-18
+ Aida   | 2025-05-25
+ Aizada | 2026-10-02
+ Aizada | 2026-07-24
+ Aizada | 2026-10-23
+ Aizada | 2023-08-18
+ Aizada | 2025-05-25
+ Altyn  | 2026-10-02
+ Altyn  | 2026-07-24
+ Altyn  | 2026-10-23
+ Altyn  | 2023-08-18
+ Altyn  | 2025-05-25
+(15 rows)
+
+
+postgres=# -- Correct
+postgres=# SELECT c.name, o.order_date
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+  name  | order_date
+--------+------------
+ Aida   | 2023-08-18
+ Aida   | 2026-07-24
+ Aizada | 2026-10-02
+ Altyn  | 2025-05-25
+(4 rows)
+
+
+postgres=# --2. Null Value Confusion
+postgres=# --Problem: Not understanding how NULLs work in outer joins. Solution: Use IS NULL or IS NOT NULL appropriately.
+postgres=# -- Find customers without orders
+postgres=# SELECT c.name
+postgres-# FROM customers c
+postgres-# LEFT JOIN orders o ON c.customer_id = o.customer_id
+postgres-# WHERE o.customer_id IS NULL;
+ name
+------
+(0 rows)
+
+
+postgres=# INSERT INTO customers (customer_id, name, email)
+postgres-# (10, 'Akylbek', 'aa14009@auca.kg');
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "10")
+LINE 2: (10, 'Akylbek', 'aa14009@auca.kg');
+         ^
+postgres=# INSERT INTO customers (name, email)
+postgres-# VALUES ('Akylbek', 'aa14009@auca.kg');
+INSERT 0 1
+postgres=# SELECT c.name
+postgres-# FROM customers c
+postgres-# LEFT JOIN orders o ON c.customer_id = o.customer_id
+postgres-# WHERE o.customer_id IS NULL;
+  name
+---------
+ Akylbek
+(1 row)
+
+
+postgres=# /*3. Many-to-Many Join Errors
+postgres*# Problem: Forgetting to include the junction table. Solution: Always join through the junction table for many-to-many relationships.
+postgres*# */
+postgres-#

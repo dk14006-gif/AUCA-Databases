@@ -1,0 +1,45 @@
+PS C:\WINDOWS\system32> # Setting up continuous archiving:
+PS C:\WINDOWS\system32> # Enable WAL archiving in postgresql.conf
+PS C:\WINDOWS\system32> New-Item -ItemType Directory -Force -Path "C:\Users\kas02\Documents\wal_archive"
+
+
+    Directory: C:\Users\kas02\Documents
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        29.10.2026     11:26                wal_archive
+
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\WINDOWS\system32> Restart-Service postgresql-x64-18
+PS C:\WINDOWS\system32>
+
+PS C:\WINDOWS\system32> # Create base backup using pg_basebackup
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_basebackup.exe" -h localhost -U postgres -D "C:\Users\kas02\Documents\base_backup" -Ft -z -P
+Password:
+
+52955/52955 kB (100%), 1/1 tablespace
+PS C:\WINDOWS\system32> # Create base backup with WAL files included
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_basebackup.exe" -h localhost -U postgres -D "C:\Users\kas02\Documents\base_backup_wal" -x -P
+C:\Program Files\PostgreSQL\18\bin\pg_basebackup.exe: illegal option -- x
+pg_basebackup: hint: Try "pg_basebackup --help" for more information.
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_basebackup.exe" -h localhost -U postgres -D "C:\Users\kas02\Documents\base_backup_wal" --wal-method=stream -P
+Password:
+
+52968/52968 kB (100%), 1/1 tablespace
+PS C:\WINDOWS\system32> # WAL archive management:
+PS C:\WINDOWS\system32> # Manual WAL file archiving
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -d postgres -c "SELECT pg_switch_wal();"
+Password for user postgres:
+
+ pg_switch_wal
+---------------
+ 0/7000078
+(1 row)
+
+
+PS C:\WINDOWS\system32> # Archive cleanup (remove old WAL files)
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_archivecleanup.exe" "C:\Users\kas02\Documents\wal_archive" 000000010000000000000010
+PS C:\WINDOWS\system32>

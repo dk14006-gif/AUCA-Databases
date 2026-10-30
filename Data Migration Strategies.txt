@@ -1,0 +1,35 @@
+Data Migration Strategies
+PS C:\WINDOWS\system32> # Create staging tables
+PS C:\WINDOWS\system32> # 1. Create source and target databases
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -c "CREATE DATABASE source_db;"
+CREATE DATABASE
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -c "CREATE DATABASE target_db;"
+CREATE DATABASE
+PS C:\WINDOWS\system32> # 2. Create sample source table with dummy data for testing
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -d source_db -c "CREATE TABLE customers (customer_id INT PRIMARY KEY, customer_name TEXT); INSERT INTO customers VALUES (1, 'Alice'), (2, 'Bob');"
+CREATE TABLE
+INSERT 0 2
+PS C:\WINDOWS\system32> # 3. Create target table with primary key constraint for conflict handling
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -d target_db -c "CREATE TABLE target_customers (customer_id INT PRIMARY KEY, customer_name TEXT);"
+CREATE TABLE
+PS C:\WINDOWS\system32> # 4. Create staging table explicitly in target database with matching schema
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -d target_db -c "CREATE TABLE staging_customers (customer_id INT PRIMARY KEY, customer_name TEXT);"
+CREATE TABLE
+PS C:\WINDOWS\system32> # 5. Extract data in batches from source database
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -d source_db -c "\copy (SELECT * FROM customers LIMIT 10000 OFFSET 0) TO 'C:\Users\kas02\Documents\customers_batch_1.csv' WITH CSV HEADER;"
+COPY 2
+PS C:\WINDOWS\system32> # 6. Transform and load into staging table on target database
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -d target_db -c "\copy staging_customers FROM 'C:\Users\kas02\Documents\customers_batch_1.csv' WITH CSV HEADER;"
+COPY 2
+PS C:\WINDOWS\system32> # 7. Validate and merge from staging into target table with conflict handling
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -d target_db -c "INSERT INTO target_customers SELECT * FROM staging_customers ON CONFLICT (customer_id) DO UPDATE SET customer_name = EXCLUDED.customer_name;"
+INSERT 0 2
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U postgres -d target_db -c "SELECT * FROM target_customers;"
+ customer_id | customer_name
+-------------+---------------
+           1 | Alice
+           2 | Bob
+(2 rows)
+
+
+PS C:\WINDOWS\system32>

@@ -1,0 +1,360 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \encoding UTF8
+postgres=# \dt
+                 List of tables
+ Schema |        Name         | Type  |  Owner
+--------+---------------------+-------+----------
+ public | accounts            | table | postgres
+ public | authors             | table | postgres
+ public | blog_posts          | table | postgres
+ public | book_authors        | table | postgres
+ public | books               | table | postgres
+ public | comments            | table | postgres
+ public | courses             | table | postgres
+ public | customers           | table | postgres
+ public | departments         | table | postgres
+ public | employees           | table | postgres
+ public | loans               | table | postgres
+ public | members             | table | postgres
+ public | order_items         | table | postgres
+ public | orders              | table | postgres
+ public | products            | table | postgres
+ public | student_enrollments | table | postgres
+ public | students            | table | postgres
+ public | transactions        | table | postgres
+ public | transfer_logs       | table | postgres
+ public | user_profiles       | table | postgres
+ public | users               | table | postgres
+(21 rows)
+
+
+postgres=# \copy employees FROM 'C:/Users/Kasiet/Documents/data.csv' WITH CSV HEADER;
+C:/Users/Kasiet/Documents/data.csv: No such file or directory
+postgres=# \copy employees TO 'C:/Users/kas02/Documents/employees_backup.csv' WITH CSV HEADER;
+COPY 9
+postgres=# -- Export data to file поднять наверх
+postgres=# -- Import data from file
+postgres=# \copy employees FROM 'C:/Users/kas02/Documents/employees_backup.csv' WITH CSV HEADER;
+DzD"D~D`DsD?:  D¿D_D²Ñ,D_Ñ?Ñ?ÑZÑ%DµDµÑ?Ñ? D·D½D°Ñ╪DµD½D,Dµ DºD»ÑZÑ╪D° D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ ÑƒD½D,DºD°D»ÑOD½D_Ñ?Ñ,D, "employees_pkey"
+DETAIL:  DsD»ÑZÑ╪ "(emp_id)=(8)" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,.
+CONTEXT:  COPY employees, Ñ?Ñ,Ñ?D_DºD° 2
+postgres=# SELECT * FROM students;
+ student_id | first_name |  last_name   |      email      | enrollment_date | birth_date
+------------+------------+--------------+-----------------+-----------------+------------
+          8 | Selima     | Askarbekova  |                 | 2026-10-20      | 2007-09-09
+          9 | Nazima     | Sabydasheva  |                 | 2026-10-20      | 2007-08-17
+         10 | Beguy      | Mukanbetova  |                 | 2026-10-20      | 2007-04-23
+         11 | Aielina    | Urkalieva    |                 | 2026-10-20      | 2008-02-02
+         12 | Sevara     | Kasymova     | ks14003@auca.kg | 2026-10-20      | 2007-08-15
+         13 | Medina     | Mamanova     | mm14014@auca.kg | 2026-10-20      | 2006-07-14
+         14 | Adinai     | Muhtarbekova | ma14017@auca.kg | 2026-10-20      | 2008-04-08
+(7 rows)
+
+
+postgres=# TRUNCATE TABLE students RESTART IDENTITY CASCADE;
+D-D?DoDDD?D?D~D:  D_D¿ÑƒÑ?Ñ,D_Ñ^DµD½D,Dµ Ñ?D°Ñ?D¿Ñ?D_Ñ?Ñ,Ñ?D°D½Ñ?DµÑ,Ñ?Ñ? D½D° Ñ,D°D±D»D,Ñ+Ñƒ student_enrollments
+TRUNCATE TABLE
+postgres=# \copy students FROM 'C:/Users/kas02/Documents/students_backup.csv' WITH CSV HEADER;
+COPY 7
+postgres=# --отсюда
+postgres=# TRUNCATE TABLE students RESTART IDENTITY CASCADE;
+D-D?DoDDD?D?D~D:  D_D¿ÑƒÑ?Ñ,D_Ñ^DµD½D,Dµ Ñ?D°Ñ?D¿Ñ?D_Ñ?Ñ,Ñ?D°D½Ñ?DµÑ,Ñ?Ñ? D½D° Ñ,D°D±D»D,Ñ+Ñƒ student_enrollments
+TRUNCATE TABLE
+postgres=# SELECT * FROM students;
+ student_id | first_name | last_name | email | enrollment_date | birth_date
+------------+------------+-----------+-------+-----------------+------------
+(0 rows)
+
+
+postgres=#  \copy students FROM 'C:/Users/kas02/Documents/students_backup.csv' WITH CSV HEADER;
+COPY 7
+postgres=# SELECT * FROM students;
+ student_id | first_name |  last_name   |      email      | enrollment_date | birth_date
+------------+------------+--------------+-----------------+-----------------+------------
+          8 | Selima     | Askarbekova  |                 | 2026-10-20      | 2007-09-09
+          9 | Nazima     | Sabydasheva  |                 | 2026-10-20      | 2007-08-17
+         10 | Beguy      | Mukanbetova  |                 | 2026-10-20      | 2007-04-23
+         11 | Aielina    | Urkalieva    |                 | 2026-10-20      | 2008-02-02
+         12 | Sevara     | Kasymova     | ks14003@auca.kg | 2026-10-20      | 2007-08-15
+         13 | Medina     | Mamanova     | mm14014@auca.kg | 2026-10-20      | 2006-07-14
+         14 | Adinai     | Muhtarbekova | ma14017@auca.kg | 2026-10-20      | 2008-04-08
+(7 rows)
+
+
+postgres=# \copy employees FROM 'C:/Users/kas02/Documents/employees_backup.csv' WITH CSV HEADER;
+DzD"D~D`DsD?:  D¿D_D²Ñ,D_Ñ?Ñ?ÑZÑ%DµDµÑ?Ñ? D·D½D°Ñ╪DµD½D,Dµ DºD»ÑZÑ╪D° D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ ÑƒD½D,DºD°D»ÑOD½D_Ñ?Ñ,D, "employees_pkey"
+DETAIL:  DsD»ÑZÑ╪ "(emp_id)=(8)" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,.
+CONTEXT:  COPY employees, Ñ?Ñ,Ñ?D_DºD° 2
+postgres=# TRUNCATE TABLE employees RESTART IDENTITY CASCADE;
+TRUNCATE TABLE
+postgres=#  \copy employees FROM 'C:/Users/kas02/Documents/employees_backup.csv' WITH CSV HEADER;
+COPY 9
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age |  bonus   | manager_id
+--------+-------------------+-----------+------------+---------+----------------------+-----+----------+------------
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45 | 15000.00 |
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18 | 15000.00 |          8
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21 |  5000.00 |          8
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18 |  5000.00 |          8
+     10 | Designer          |  52000.00 | 2026-10-20 |       3 | Adel Kerimova        |  19 |          |          1
+     12 | SQL Developer     |  79000.00 | 2026-10-20 |       1 | Symbat Kanybekova    |  18 |          |          1
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45 | 15000.00 |          2
+     11 | Nurse             |  48000.00 | 2026-10-20 |       4 | Elnure Bekeshova     |  20 |          |          2
+     13 | Salesmaker        |  49000.00 | 2026-10-20 |       2 | Ataibek Jakypov      |  33 |          |          3
+(9 rows)
+
+
+postgres=# Advanced COPY options:
+postgres-# ;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "Advanced")
+LINE 1: Advanced COPY options:
+        ^
+postgres=# --удалить 2 строки
+postgres=# --Advanced COPY options:
+postgres=# -- Export with custom delimiter and null representation
+postgres=# \copy students TO 'C:Users/kas02/Documents/students.txt' WITH DELIMITER '|' NULL 'N/A' CSV HEADER;
+C:Users/kas02/Documents/students.txt: No such file or directory
+postgres=#  \copy students TO 'C:/Users/kas02/Documents/students.txt' WITH DELIMITER '|' NULL 'N/A' CSV HEADER;
+COPY 7
+postgres=# -- Import specific columns only
+postgres=# \copy students(first_name, last_name) FROM 'C:Users/kas02/Documents/students_backup.csv' WITH CSV HEADER;
+C:Users/kas02/Documents/students_backup.csv: No such file or directory
+postgres=# --удалить 1 строку
+postgres=#  \copy students(first_name, last_name) FROM 'C:/Users/kas02/Documents/students_backup.csv' WITH CSV HEADER;
+DzD"D~D`DsD?:  D»D,Ñ^D½D,Dµ D'D°D½D½Ñ<Dµ D¿D_Ñ?D»Dµ Ñ?D_D'DµÑ?DD,D¼D_D3D_ D¿D_Ñ?D»DµD'D½DµD3D_ Ñ?Ñ,D_D»D±Ñ+D°
+CONTEXT:  COPY students, Ñ?Ñ,Ñ?D_DºD° 2: "8,Selima,Askarbekova,,2026-10-20,2007-09-09"
+postgres=# TRUNCATE TABLE  students RESTART IDENTITY CASCADE;
+D-D?DoDDD?D?D~D:  D_D¿ÑƒÑ?Ñ,D_Ñ^DµD½D,Dµ Ñ?D°Ñ?D¿Ñ?D_Ñ?Ñ,Ñ?D°D½Ñ?DµÑ,Ñ?Ñ? D½D° Ñ,D°D±D»D,Ñ+Ñƒ student_enrollments
+TRUNCATE TABLE
+postgres=# SELECT * FROM students;
+ student_id | first_name | last_name | email | enrollment_date | birth_date
+------------+------------+-----------+-------+-----------------+------------
+(0 rows)
+
+
+postgres=# \copy students(first_name, last_name) FROM 'C:/Users/kas02/Documents/students_backup.csv' WITH CSV HEADER;
+DzD"D~D`DsD?:  D»D,Ñ^D½D,Dµ D'D°D½D½Ñ<Dµ D¿D_Ñ?D»Dµ Ñ?D_D'DµÑ?DD,D¼D_D3D_ D¿D_Ñ?D»DµD'D½DµD3D_ Ñ?Ñ,D_D»D±Ñ+D°
+CONTEXT:  COPY students, Ñ?Ñ,Ñ?D_DºD° 2: "8,Selima,Askarbekova,,2026-10-20,2007-09-09"
+postgres=# --удалить 1 строку до
+postgres=# \copy students(first_name, last_name) FROM 'C:/Users/kas02/Documents/new_students.txt' WITH CSV HEADER;
+C:/Users/kas02/Documents/new_students.txt: No such file or directory
+postgres=#  --удалить 1 строку до
+postgres=#  \copy students(first_name, last_name) FROM 'C:/Users/kas02/Documents/new_students.txt' WITH CSV HEADER;
+COPY 5
+postgres=# SELECT * FROM students;
+ student_id | first_name |  last_name  | email | enrollment_date | birth_date
+------------+------------+-------------+-------+-----------------+------------
+          1 | Selima     | Askarbekova |       | 2026-10-29      |
+          2 | Nazima     | Sabydasheva |       | 2026-10-29      |
+          3 | Beguy      | Mukanbetova |       | 2026-10-29      |
+          4 | Aielina    | Urkalieva   |       | 2026-10-29      |
+          5 | Sevara     | Kasymova    |       | 2026-10-29      |
+(5 rows)
+
+
+postgres=# -- Export query results
+postgres=# SELECT * FROM employees;
+ emp_id |     position      |  salary   | hire_date  | dept_id |         name         | age |  bonus   | manager_id
+--------+-------------------+-----------+------------+---------+----------------------+-----+----------+------------
+      8 | President         | 200000.00 | 2026-10-15 |       2 | Nurmira Kydyrmyshova |  45 | 15000.00 |
+      1 | Software Engineer | 102000.00 | 2026-10-11 |       1 | Kasiet Dokturbaeva   |  18 | 15000.00 |          8
+      6 | Adviser           |  50000.00 | 2026-10-15 |       2 | Akbiikem Dokturbaeva |  21 |  5000.00 |          8
+      7 | Manager           |  45000.00 | 2026-10-15 |       3 | Keremet Dokturbaeva  |  18 |  5000.00 |          8
+     10 | Designer          |  52000.00 | 2026-10-20 |       3 | Adel Kerimova        |  19 |          |          1
+     12 | SQL Developer     |  79000.00 | 2026-10-20 |       1 | Symbat Kanybekova    |  18 |          |          1
+      9 | Doctor            | 125000.00 | 2026-10-15 |       4 | Ulan Ishenabaev      |  45 | 15000.00 |          2
+     11 | Nurse             |  48000.00 | 2026-10-20 |       4 | Elnure Bekeshova     |  20 |          |          2
+     13 | Salesmaker        |  49000.00 | 2026-10-20 |       2 | Ataibek Jakypov      |  33 |          |          3
+(9 rows)
+
+
+postgres=# --\copy (SELECT * FROM employees WHERE dept_id = 2) TO 'C:/Users/kas02/Documents/
+postgres=# SELECT * FROM departments;
+ dept_id |      dept_name       |    manager_name     |   budget
+---------+----------------------+---------------------+------------
+       3 | Marketing            | Alina Kulakova      |  400000.00
+       4 | Medical Centre       | Aibek Asanbekov     |  500000.00
+       5 | International Office | Meerim Bairova      |  800000.00
+       1 | Engineering          | Cabina Kenilchekova | 2000000.00
+       2 | Administrating       | Talgat Tulenbaev    | 1500000.00
+(5 rows)
+
+
+postgres=# \copy (SELECT * FROM employees WHERE dept_id = 2) TO 'C:/Users/kas02/Documents/admin_employees.csv' WITH CSV HEADER;
+COPY 3
+postgres=# --CSV Import/Export
+postgres=# --CSV Export Examples:
+postgres=# -- Basic CSV export with headers
+postgres=# COPY books TO 'C:/Users/kas02/Documents/books.csv' WITH CSV HEADER;
+DzD"D~D`DsD?:  D½Dµ ÑƒD'D°D»D_Ñ?ÑO D_Ñ,DºÑ?Ñ<Ñ,ÑO Ñ,D°D1D» "C:/Users/kas02/Documents/books.csv" D'D»Ñ? D·D°D¿D,Ñ?D,: Permission denied
+HINT:  COPY TO ÑƒDºD°D·Ñ<D²D°DµÑ, Ñ?DµÑ?D²DµÑ?D½D_D¼Ñƒ D¿Ñ?D_Ñ+DµÑ?Ñ?Ñƒ PostgreSQL D·D°D¿D,Ñ?D°Ñ,ÑO D'D°D½D½Ñ<Dµ D² Ñ,D°D1D». D'D_D·D¼D_DD½D_, D½D° Ñ?D°D¼D_D¼ D'DµD»Dµ D²D°D¼ D½ÑƒDD½D_ DºD»D,DµD½Ñ,Ñ?DºD_Dµ Ñ?Ñ?DµD'Ñ?Ñ,D²D_, D½D°D¿Ñ?D,D¼DµÑ?, \copy D² psql.
+postgres=# --delete 1 before
+postgres=# \copy books TO 'C:/Users/kas02/Documents/books.csv' WITH CSV HEADER;
+COPY 3
+postgres=# -- CSV export with custom quote character and delimiter
+postgres=# \copy customers TO 'C:/Users/kas02/Documents/customers.csv'
+COPY 7
+postgres=# \copy customers TO 'C:/Users/kas02/Documents/customers.csv' WITH CSV HEADER DELIMITER ';' QUOTE '"';
+COPY 7
+postgres=# \copy customers TO 'C:/Users/kas02/Documents/customers.txt' WITH CSV HEADER DELIMITER ';' QUOTE '"';
+COPY 7
+postgres=# -- Export with custom date format
+postgres=# COPY orders TO 'C:/Users/kas02/Documents/orders.csv' WITH CSV HEADER FORCE_QUOTE (order_date);
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "FORCE_QUOTE")
+LINE 1: ...Users/kas02/Documents/orders.csv' WITH CSV HEADER FORCE_QUOT...
+                                                             ^
+postgres=# \copy orders TO 'C:/Users/kas02/Documents/orders.csv' WITH CSV HEADER FORCE_QUOTE order_date;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "FORCE_QUOTE")
+LINE 1: COPY  orders TO STDOUT WITH CSV HEADER FORCE_QUOTE order_dat...
+                                               ^
+postgres=# \copy orders TO 'C:/Users/kas02/Documents/orders.csv' WITH (FORMAT csv, HEADER, FORCE_QUOTE (order_date));
+COPY 8
+postgres=# --CSV Import Examples:
+postgres=# -- Basic CSV import (assuming table already exists)
+postgres=# TRUNCATE TABLE students RESTART IDENTITY CASCADE;
+D-D?DoDDD?D?D~D:  D_D¿ÑƒÑ?Ñ,D_Ñ^DµD½D,Dµ Ñ?D°Ñ?D¿Ñ?D_Ñ?Ñ,Ñ?D°D½Ñ?DµÑ,Ñ?Ñ? D½D° Ñ,D°D±D»D,Ñ+Ñƒ student_enrollments
+TRUNCATE TABLE
+postgres=#  \copy students FROM 'C:/Users/kas02/Documents/students_backup.csv' WITH CSV HEADER;
+COPY 7
+postgres=# SELECT * FROM students;
+ student_id | first_name |  last_name   |      email      | enrollment_date | birth_date
+------------+------------+--------------+-----------------+-----------------+------------
+          8 | Selima     | Askarbekova  |                 | 2026-10-20      | 2007-09-09
+          9 | Nazima     | Sabydasheva  |                 | 2026-10-20      | 2007-08-17
+         10 | Beguy      | Mukanbetova  |                 | 2026-10-20      | 2007-04-23
+         11 | Aielina    | Urkalieva    |                 | 2026-10-20      | 2008-02-02
+         12 | Sevara     | Kasymova     | ks14003@auca.kg | 2026-10-20      | 2007-08-15
+         13 | Medina     | Mamanova     | mm14014@auca.kg | 2026-10-20      | 2006-07-14
+         14 | Adinai     | Muhtarbekova | ma14017@auca.kg | 2026-10-20      | 2008-04-08
+(7 rows)
+
+
+postgres=# -- CSV export with custom quote character and delimiter
+postgres=# --delete
+postgres=# -- Import with error handling - skip bad rows
+postgres=# TRUNCATE TABLE procuts RESTART IDETNTITY CASCADE;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "IDETNTITY")
+LINE 1: TRUNCATE TABLE procuts RESTART IDETNTITY CASCADE;
+                                       ^
+postgres=# --delete 1
+postgres=# TRUNCATE TABLE procuts RESTART IDENTITY CASCADE;
+DzD"D~D`DsD?:  D_Ñ,D½D_Ñ^DµD½D,Dµ "procuts" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,
+postgres=# --delete 1
+postgres=# TRUNCATE TABLE products RESTART IDENTITY CASCADE;
+D-D?DoDDD?D?D~D:  D_D¿ÑƒÑ?Ñ,D_Ñ^DµD½D,Dµ Ñ?D°Ñ?D¿Ñ?D_Ñ?Ñ,Ñ?D°D½Ñ?DµÑ,Ñ?Ñ? D½D° Ñ,D°D±D»D,Ñ+Ñƒ order_items
+TRUNCATE TABLE
+postgres=# \copy products FROM 'C:/Users/kas02/Documents/products_with_errors.txt' WITH CSV HEADER ON_ERROR IGNORE;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "ON_ERROR")
+LINE 1: COPY  products FROM STDIN WITH CSV HEADER ON_ERROR IGNORE;
+                                                  ^
+postgres=# COPY products FROM '/tmp/products_with_errors.csv'
+postgres-# WITH CSV HEADER ON_ERROR IGNORE;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "ON_ERROR")
+LINE 2: WITH CSV HEADER ON_ERROR IGNORE;
+                        ^
+postgres=# COPY  products FROM 'C:/Users/kas02/Documents/products_with_errors.txt' WITH CSV HEADER ON_ERROR IGNORE;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "ON_ERROR")
+LINE 1: ...cuments/products_with_errors.txt' WITH CSV HEADER ON_ERROR I...
+                                                             ^
+postgres=# \copy products FROM 'C:/Users/kas02/Documents/products_with_errors.txt' WITH CSV HEADER;
+DzD"D~D`DsD?:  D½DµD²DµÑ?D½Ñ<D1 Ñ?D,D½Ñ,D°DºÑ?D,Ñ? D'D»Ñ? Ñ,D,D¿D° numeric: "kkk"
+CONTEXT:  COPY products, Ñ?Ñ,Ñ?D_DºD° 5, Ñ?Ñ,D_D»D±DµÑ+ price: "kkk"
+postgres=# -- Import with specific encoding
+postgres=# \copy products FROM 'C:/Users/kas02/Documents/products_utf8.csv' WITH CSV HEADER ENCODING 'UTF8';
+DzD"D~D`DsD?:  D½DµD²DµÑ?D½Ñ<D1 Ñ?D,D½Ñ,D°DºÑ?D,Ñ? D'D»Ñ? Ñ,D,D¿D° numeric: "kkk"
+CONTEXT:  COPY products, Ñ?Ñ,Ñ?D_DºD° 5, Ñ?Ñ,D_D»D±DµÑ+ price: "kkk"
+postgres=# --delete
+postgres=#  \copy products FROM 'C:/Users/kas02/Documents/products_utf8.csv' WITH CSV HEADER ENCODING 'UTF8';
+COPY 5
+postgres=# SRLECT * FROM products;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: "SRLECT")
+LINE 1: SRLECT * FROM products;
+        ^
+postgres=# --delete
+postgres=# SELECT * FROM products;
+ product_id |    product_name     | price
+------------+---------------------+--------
+          1 | Database Textbook   |  44.99
+          2 | MackBook Neo A18Pro | 870.00
+          3 | Laptop              | 999.99
+          4 | Mouse               |  49.99
+          6 | Keyboard            |  79.99
+(5 rows)
+
+
+postgres=# --Handling special cases:
+postgres=# -- Deal with embedded commas and quotes
+postgres=# SELECT * FROM user_profiles;
+ profile_id | user_id | first_name | last_name |                          bio                           | profile_picture_url
+------------+---------+------------+-----------+--------------------------------------------------------+---------------------
+          1 |       1 | Aidemi     | Kerimova  | Business Administrator seeking for career developments |
+          5 |       3 | Keremet    | Asanbaeva | AI developer looking for job oportunities              |
+(2 rows)
+
+
+postgres=# \copy user_profiles TO 'C:/Users/kas02/Documents/user_profiles.csv' WITH CSV HEADER DELIMITER ',' QUOTE '"' ESCAPE;
+DzD"D~D`DsD?:  D_Ñ^D,D±DºD° Ñ?D,D½Ñ,D°DºÑ?D,Ñ?D° (D¿Ñ?D,D¼DµÑ?D½D_Dµ D¿D_D»D_DDµD½D,Dµ: ";")
+LINE 1: ...es TO STDOUT WITH CSV HEADER DELIMITER ',' QUOTE '"' ESCAPE;
+                                                                      ^
+postgres=# --delete
+postgres=#  \copy user_profiles TO 'C:/Users/kas02/Documents/user_profiles.csv' WITH CSV HEADER DELIMITER ',' QUOTE '"' ESCAPE '"';
+COPY 2
+postgres=# -- Custom NULL representation
+postgres=# SELECT * FROM student_enrollments;
+ enrollment_id | student_id | course_id | enrollment_date | grade
+---------------+------------+-----------+-----------------+-------
+(0 rows)
+
+
+postgres=# SELECT * FROM studentd;
+DzD"D~D`DsD?:  D_Ñ,D½D_Ñ^DµD½D,Dµ "studentd" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,
+LINE 1: SELECT * FROM studentd;
+                      ^
+postgres=# --delete
+postgres=# SELECT* FROM students;
+ student_id | first_name |  last_name   |      email      | enrollment_date | birth_date
+------------+------------+--------------+-----------------+-----------------+------------
+          8 | Selima     | Askarbekova  |                 | 2026-10-20      | 2007-09-09
+          9 | Nazima     | Sabydasheva  |                 | 2026-10-20      | 2007-08-17
+         10 | Beguy      | Mukanbetova  |                 | 2026-10-20      | 2007-04-23
+         11 | Aielina    | Urkalieva    |                 | 2026-10-20      | 2008-02-02
+         12 | Sevara     | Kasymova     | ks14003@auca.kg | 2026-10-20      | 2007-08-15
+         13 | Medina     | Mamanova     | mm14014@auca.kg | 2026-10-20      | 2006-07-14
+         14 | Adinai     | Muhtarbekova | ma14017@auca.kg | 2026-10-20      | 2008-04-08
+(7 rows)
+
+
+postgres=# \copy students FROM 'C:/Users/kas02/Documents/students.csv' WITH CSV HEADER NULL 'NULL';
+C:/Users/kas02/Documents/students.csv: No such file or directory
+postgres=# TRUNCATE TABLE students RESTART IDENTITY CASCADE;
+D-D?DoDDD?D?D~D:  D_D¿ÑƒÑ?Ñ,D_Ñ^DµD½D,Dµ Ñ?D°Ñ?D¿Ñ?D_Ñ?Ñ,Ñ?D°D½Ñ?DµÑ,Ñ?Ñ? D½D° Ñ,D°D±D»D,Ñ+Ñƒ student_enrollments
+TRUNCATE TABLE
+postgres=# \copy students FROM 'C:/Users/kas02/Documents/students.csv' WITH CSV HEADER NULL 'NULL';
+C:/Users/kas02/Documents/students.csv: No such file or directory
+postgres=# \copy students FROM 'C:/Users/kas02/Documents/students_backup.csv' WITH CSV HEADER NULL 'NULL';
+COPY 7
+postgres=# SELECT * FROM students;
+ student_id | first_name |  last_name   |      email      | enrollment_date | birth_date
+------------+------------+--------------+-----------------+-----------------+------------
+          8 | Selima     | Askarbekova  |                 | 2026-10-20      | 2007-09-09
+          9 | Nazima     | Sabydasheva  |                 | 2026-10-20      | 2007-08-17
+         10 | Beguy      | Mukanbetova  |                 | 2026-10-20      | 2007-04-23
+         11 | Aielina    | Urkalieva    |                 | 2026-10-20      | 2008-02-02
+         12 | Sevara     | Kasymova     | ks14003@auca.kg | 2026-10-20      | 2007-08-15
+         13 | Medina     | Mamanova     | mm14014@auca.kg | 2026-10-20      | 2006-07-14
+         14 | Adinai     | Muhtarbekova | ma14017@auca.kg | 2026-10-20      | 2008-04-08
+(7 rows)
+
+
+postgres=# --pg_dump and pg_restore

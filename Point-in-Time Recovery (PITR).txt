@@ -1,0 +1,34 @@
+Point-in-Time Recovery (PITR)
+# 1. Stop PostgreSQL server
+PS C:\WINDOWS\system32> Stop-Service postgresql-x64-18
+WARNING: Waiting for service 'postgresql-x64-18 - PostgreSQL Server 18 (postgresql-x64-18)' to stop...
+# 2. Remove current data directory
+PS C:\WINDOWS\system32> Remove-Item -Path "C:\Program Files\PostgreSQL\18\data\*" -Recurse -Force
+# 3. Restore base backup
+PS C:\WINDOWS\system32> Copy-Item -Path "C:\Users\kas02\Documents\base_backup\*" -Destination "C:\Program Files\PostgreSQL\18\data\" -Recurse -Force
+# 4. Create recovery configuration
+PS C:\WINDOWS\system32> $SignalContent = @"
+>> restore_command = 'copy "C:\\Users\\kas02\\Documents\\wal_archive\\%f" "%p"'
+>> recovery_target_time = '2026-10-29 14:30:00'
+>> "@
+>>
+>> Set-Content -Path "C:\Program Files\PostgreSQL\18\data\recovery.signal" -Value $SignalContent
+# 5. Start PostgreSQL (recovery will begin automatically)
+PS C:\WINDOWS\system32> Start-Service postgresql-x64-18
+
+Performing PITR:
+Recovery targeting options:
+PS C:\WINDOWS\system32> # 1. Stop PostgreSQL server
+>> Stop-Service postgresql-x64-18
+PS C:\WINDOWS\system32> # 2. Remove current data directory
+>> Remove-Item -Path "C:\Program Files\PostgreSQL\18\data\*" -Recurse -Force
+PS C:\WINDOWS\system32> # 3. Restore base backup
+>> Copy-Item -Path "C:\Users\kas02\Documents\base_backup\*" -Destination "C:\Program Files\PostgreSQL\18\data\" -Recurse -Force
+PS C:\WINDOWS\system32> # 4. Create recovery configuration
+>> $SignalContent = @"
+>> restore_command = 'copy "C:\\Users\\kas02\\Documents\\wal_archive\\%f" "%p"'
+>> recovery_target_time = '2026-10-29 14:30:00'
+>> "@
+PS C:\WINDOWS\system32> Set-Content -Path "C:\Program Files\PostgreSQL\18\data\recovery.signal" -Value $SignalContent
+PS C:\WINDOWS\system32> # 5. Start PostgreSQL (recovery will begin automatically)
+>> Start-Service postgresql-x64-18

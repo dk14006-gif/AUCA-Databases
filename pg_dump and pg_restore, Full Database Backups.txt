@@ -1,0 +1,393 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -Fc > C:/Users/kas02/Documents/backup.dump
+Password:
+
+PS C:\WINDOWS\system32> # Compressed custom format backup (recommended)
+PS C:\WINDOWS\system32> pg_dump -h localhost -U postgres -d postgres -s > C:/Users/kas02/Documents/schema_only.sql
+pg_dump : The term 'pg_dump' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a
+ path was included, verify that the path is correct and try again.
+At line:1 char:1
++ pg_dump -h localhost -U postgres -d postgres -s > C:/Users/kas02/Docu ...
++ ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (pg_dump:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -s > C:/Users/kas02/Documents/schema_only.sql
+Password:
+
+PS C:\WINDOWS\system32> # Backup specific tables only
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -a > C:/Users/kas02/Documents/data_only.sql
+Password:
+
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\createdb.exe" -h localhost -U postgres restored_db
+Password:
+
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_restore.exe" -h localhost -U postgres -d restored_db C:/Users/kas02/Documents/backup.dump
+pg_restore: error: input file does not appear to be a valid tar archive
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -Fc -f "C:/Users/kas02/Documents/backup.dump"
+Password:
+
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_restore.exe" -h localhost -U postgres -d restored_db "C:/Users/kas02/Documents/backup.dump"
+
+Password:
+
+PS C:\WINDOWS\system32> # Restore specific tables only
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_restore.exe" -h localhost -U postgres -d postgres -t products "C:/Users/kas02/Documents/backup.dump"
+Password:
+
+pg_restore: error: could not execute query: DzD"D~D`DsD?:  D_Ñ,D½D_Ñ^DµD½D,Dµ "products" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,
+Command was: CREATE TABLE public.products (
+    product_id integer NOT NULL,
+    product_name character varying(100) NOT NULL,
+    price numeric(10,2)
+);
+
+
+pg_restore: error: COPY failed for table "products": DzD"D~D`DsD?:  D¿D_D²Ñ,D_Ñ?Ñ?ÑZÑ%DµDµÑ?Ñ? D·D½D°Ñ╪DµD½D,Dµ DºD»ÑZÑ╪D° D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ ÑƒD½D,DºD°D»ÑOD½D_Ñ?Ñ,D, "products_pkey"
+DETAIL:  DsD»ÑZÑ╪ "(product_id)=(1)" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,.
+CONTEXT:  COPY products, Ñ?Ñ,Ñ?D_DºD° 1
+pg_restore: warning: errors ignored on restore: 2
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_restore.exe" -h localhost -U postgres -d postgres -c -t products "C:/Users/kas02/Documents/backup.dump"
+Password:
+
+pg_restore: error: could not execute query: DzD"D~D`DsD?:  ÑƒD'D°D»D,Ñ,ÑO D_D±ÑSDµDºÑ, Ñ,D°D±D»D,Ñ+D° public.products D½DµD»ÑOD·Ñ?, Ñ,D°Dº DºD°Dº D_Ñ, D½DµD3D_ D·D°D²D,Ñ?Ñ?Ñ, D'Ñ?ÑƒD3D,Dµ D_D±ÑSDµDºÑ,Ñ<
+DETAIL:  D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ order_items_product_id_fkey D² D_Ñ,D½D_Ñ^DµD½D,D, Ñ,D°D±D»D,Ñ+D° public.order_items D·D°D²D,Ñ?D,Ñ, D_Ñ, D_D±ÑSDµDºÑ,D° Ñ,D°D±D»D,Ñ+D° public.products
+HINT:  D"D»Ñ? ÑƒD'D°D»DµD½D,Ñ? D·D°D²D,Ñ?D,D¼Ñ<Ñ. D_D±ÑSDµDºÑ,D_D² D,Ñ?D¿D_D»ÑOD·ÑƒD1Ñ,Dµ DROP ... CASCADE.
+Command was: DROP TABLE public.products;
+pg_restore: error: could not execute query: DzD"D~D`DsD?:  D_Ñ,D½D_Ñ^DµD½D,Dµ "products" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,
+Command was: CREATE TABLE public.products (
+    product_id integer NOT NULL,
+    product_name character varying(100) NOT NULL,
+    price numeric(10,2)
+);
+
+
+pg_restore: error: COPY failed for table "products": DzD"D~D`DsD?:  D¿D_D²Ñ,D_Ñ?Ñ?ÑZÑ%DµDµÑ?Ñ? D·D½D°Ñ╪DµD½D,Dµ DºD»ÑZÑ╪D° D½D°Ñ?ÑƒÑ^D°DµÑ, D_D3Ñ?D°D½D,Ñ╪DµD½D,Dµ ÑƒD½D,DºD°D»ÑOD½D_Ñ?Ñ,D, "products_pkey"
+DETAIL:  DsD»ÑZÑ╪ "(product_id)=(1)" ÑƒDDµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,.
+CONTEXT:  COPY products, Ñ?Ñ,Ñ?D_DºD° 1
+pg_restore: warning: errors ignored on restore: 3
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> # Schema-only backup
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -s -f "C:/Users/kas02/Documents/schema_only.sql"
+Password:
+
+PS C:\WINDOWS\system32> # Data-only backup
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -a -f "C:/Users/kas02/Documents/data_only.sql"
+Password:
+
+PS C:\WINDOWS\system32> # Exclude specific tables
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -T products -f "C:/Users/kas02/Documents/backup_without_products.sql"
+Password:
+
+PS C:\WINDOWS\system32> # Full Database Backups
+PS C:\WINDOWS\system32> # Full backup with all databases on the server
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dumpall.exe" -h localhost -U postgres > "C:/Users/kas02/Documents/full_cluster_backup.sql"
+Password:
+
+Password:
+
+Password:
+
+Password:
+
+Password:
+
+PS C:\WINDOWS\system32> # Full backup of single database with all objects
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -Fc --verbose -f "C:/Users/kas02/Documents/full_production_backup.dump"
+Password:
+
+pg_dump: executing SELECT pg_catalog.set_config('search_path', '', false);
+pg_dump: last built-in OID is 16383
+pg_dump: reading extensions
+pg_dump: identifying extension members
+pg_dump: reading schemas
+pg_dump: reading user-defined tables
+pg_dump: reading user-defined functions
+pg_dump: reading user-defined types
+pg_dump: reading procedural languages
+pg_dump: reading user-defined aggregate functions
+pg_dump: reading user-defined operators
+pg_dump: reading user-defined access methods
+pg_dump: reading user-defined operator classes
+pg_dump: reading user-defined operator families
+pg_dump: reading user-defined text search parsers
+pg_dump: reading user-defined text search templates
+pg_dump: reading user-defined text search dictionaries
+pg_dump: reading user-defined text search configurations
+pg_dump: reading user-defined foreign-data wrappers
+pg_dump: reading user-defined foreign servers
+pg_dump: reading default privileges
+pg_dump: reading user-defined collations
+pg_dump: reading user-defined conversions
+pg_dump: reading type casts
+pg_dump: reading transforms
+pg_dump: reading table inheritance information
+pg_dump: reading event triggers
+pg_dump: finding extension tables
+pg_dump: finding inheritance relationships
+pg_dump: reading column info for interesting tables
+pg_dump: finding table default expressions
+pg_dump: flagging inherited columns in subtables
+pg_dump: reading partitioning data
+pg_dump: reading indexes
+pg_dump: flagging indexes in partitioned tables
+pg_dump: reading extended statistics
+pg_dump: reading constraints
+pg_dump: reading triggers
+pg_dump: reading rewrite rules
+pg_dump: reading policies
+pg_dump: reading row-level security policies
+pg_dump: reading publications
+pg_dump: reading publication membership of tables
+pg_dump: reading publication membership of schemas
+pg_dump: reading subscriptions
+pg_dump: reading subscription membership of tables
+pg_dump: reading large objects
+pg_dump: reading dependency data
+pg_dump: saving encoding = UTF8
+pg_dump: saving "standard_conforming_strings = on"
+pg_dump: saving "search_path = "
+pg_dump: saving database definition
+pg_dump: dumping contents of table "public.accounts"
+pg_dump: dumping contents of table "public.authors"
+pg_dump: dumping contents of table "public.blog_posts"
+pg_dump: dumping contents of table "public.book_authors"
+pg_dump: dumping contents of table "public.books"
+pg_dump: dumping contents of table "public.comments"
+pg_dump: dumping contents of table "public.courses"
+pg_dump: dumping contents of table "public.customers"
+pg_dump: dumping contents of table "public.departments"
+pg_dump: dumping contents of table "public.employees"
+pg_dump: dumping contents of table "public.loans"
+pg_dump: dumping contents of table "public.members"
+pg_dump: dumping contents of table "public.order_items"
+pg_dump: dumping contents of table "public.orders"
+pg_dump: dumping contents of table "public.products"
+pg_dump: dumping contents of table "public.student_enrollments"
+pg_dump: dumping contents of table "public.students"
+pg_dump: dumping contents of table "public.transactions"
+pg_dump: dumping contents of table "public.transfer_logs"
+pg_dump: dumping contents of table "public.user_profiles"
+pg_dump: dumping contents of table "public.users"
+PS C:\WINDOWS\system32> # Full backup with ownership information preserved
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d postgres -Fc -O -f "C:/Users/kas02/Documents/backup_with_ownership.dump"
+Password:
+
+PS C:\WINDOWS\system32> #!/bin/bash
+PS C:\WINDOWS\system32> # Daily backup script
+PS C:\WINDOWS\system32> $Date = Get-Date -Format "yyyyMMdd_HHmmss"
+PS C:\WINDOWS\system32> $BackupDir = "C:\Users\kas02\Documents\backups"
+PS C:\WINDOWS\system32> $DbName = "postgres"
+PS C:\WINDOWS\system32> if (!(Test-Path -Path $BackupDir)) {
+>>     New-Item -ItemType Directory -Force -Path $BackupDir
+>> }
+
+
+    Directory: C:\Users\kas02\Documents
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        29.10.2026     11:10                backups
+
+
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -h localhost -U postgres -d $DbName -Fc -f "$BackupDir\${DbName}_${Date}.dump"
+Password:
+
+PS C:\WINDOWS\system32> # Keep only last 7 days of backups
+PS C:\WINDOWS\system32> Get-ChildItem -Path $BackupDir -Filter "${DbName}_*.dump" | Where-Object { $_.CreationTime -lt (Get-Date).AddDays(-7) } | Remove-Item
+PS C:\WINDOWS\system32> # Test backup integrity
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_restore.exe" --list "C:/Users/kas02/Documents/backup.dump"
+;
+; Archive created at 2026-10-29 10:41:34
+;     dbname: postgres
+;     TOC Entries: 173
+;     Compression: gzip
+;     Dump Version: 1.16-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 18.6
+;     Dumped by pg_dump version: 18.6
+;
+;
+; Selected TOC Entries:
+;
+6; 2615 24588 SCHEMA - academic postgres
+260; 1259 25157 TABLE public accounts postgres
+259; 1259 25156 SEQUENCE public accounts_account_id_seq postgres
+5258; 0 0 SEQUENCE OWNED BY public accounts_account_id_seq postgres
+245; 1259 25010 TABLE public authors postgres
+244; 1259 25009 SEQUENCE public authors_author_id_seq postgres
+5259; 0 0 SEQUENCE OWNED BY public authors_author_id_seq postgres
+235; 1259 24931 TABLE public blog_posts postgres
+234; 1259 24930 SEQUENCE public blog_posts_post_id_seq postgres
+5260; 0 0 SEQUENCE OWNED BY public blog_posts_post_id_seq postgres
+248; 1259 25031 TABLE public book_authors postgres
+247; 1259 25020 TABLE public books postgres
+246; 1259 25019 SEQUENCE public books_book_id_seq postgres
+5261; 0 0 SEQUENCE OWNED BY public books_book_id_seq postgres
+237; 1259 24943 TABLE public comments postgres
+236; 1259 24942 SEQUENCE public comments_comment_id_seq postgres
+5262; 0 0 SEQUENCE OWNED BY public comments_comment_id_seq postgres
+241; 1259 24974 TABLE public courses postgres
+240; 1259 24973 SEQUENCE public courses_course_id_seq postgres
+5263; 0 0 SEQUENCE OWNED BY public courses_course_id_seq postgres
+254; 1259 25091 TABLE public customers postgres
+253; 1259 25090 SEQUENCE public customers_customer_id_seq postgres
+5264; 0 0 SEQUENCE OWNED BY public customers_customer_id_seq postgres
+231; 1259 24904 TABLE public departments postgres
+230; 1259 24903 SEQUENCE public departments_dept_id_seq postgres
+5265; 0 0 SEQUENCE OWNED BY public departments_dept_id_seq postgres
+233; 1259 24914 TABLE public employees postgres
+232; 1259 24913 SEQUENCE public employees_emp_id_seq postgres
+5266; 0 0 SEQUENCE OWNED BY public employees_emp_id_seq postgres
+252; 1259 25063 TABLE public loans postgres
+251; 1259 25062 SEQUENCE public loans_loan_id_seq postgres
+5267; 0 0 SEQUENCE OWNED BY public loans_loan_id_seq postgres
+250; 1259 25049 TABLE public members postgres
+249; 1259 25048 SEQUENCE public members_member_id_seq postgres
+5268; 0 0 SEQUENCE OWNED BY public members_member_id_seq postgres
+258; 1259 25130 TABLE public order_items postgres
+257; 1259 25129 SEQUENCE public order_items_order_item_id_seq postgres
+5269; 0 0 SEQUENCE OWNED BY public order_items_order_item_id_seq postgres
+256; 1259 25099 TABLE public orders postgres
+255; 1259 25098 SEQUENCE public orders_order_id_seq postgres
+5270; 0 0 SEQUENCE OWNED BY public orders_order_id_seq postgres
+223; 1259 24669 TABLE public products postgres
+222; 1259 24668 SEQUENCE public products_product_id_seq postgres
+5271; 0 0 SEQUENCE OWNED BY public products_product_id_seq postgres
+243; 1259 24987 TABLE public student_enrollments postgres
+242; 1259 24986 SEQUENCE public student_enrollments_enrollment_id_seq postgres
+5272; 0 0 SEQUENCE OWNED BY public student_enrollments_enrollment_id_seq postgres
+239; 1259 24961 TABLE public students postgres
+238; 1259 24960 SEQUENCE public students_student_id_seq postgres
+5273; 0 0 SEQUENCE OWNED BY public students_student_id_seq postgres
+225; 1259 24678 TABLE public transactions postgres
+224; 1259 24677 SEQUENCE public transactions_transaction_id_seq postgres
+5274; 0 0 SEQUENCE OWNED BY public transactions_transaction_id_seq postgres
+262; 1259 25165 TABLE public transfer_logs postgres
+261; 1259 25164 SEQUENCE public transfer_logs_log_id_seq postgres
+5275; 0 0 SEQUENCE OWNED BY public transfer_logs_log_id_seq postgres
+229; 1259 24886 TABLE public user_profiles postgres
+228; 1259 24885 SEQUENCE public user_profiles_profile_id_seq postgres
+5276; 0 0 SEQUENCE OWNED BY public user_profiles_profile_id_seq postgres
+227; 1259 24836 TABLE public users postgres
+226; 1259 24835 SEQUENCE public users_user_id_seq postgres
+5277; 0 0 SEQUENCE OWNED BY public users_user_id_seq postgres
+4987; 2604 25160 DEFAULT public accounts account_id postgres
+4976; 2604 25013 DEFAULT public authors author_id postgres
+4967; 2604 24934 DEFAULT public blog_posts post_id postgres
+4977; 2604 25023 DEFAULT public books book_id postgres
+4969; 2604 24946 DEFAULT public comments comment_id postgres
+4973; 2604 24977 DEFAULT public courses course_id postgres
+4984; 2604 25094 DEFAULT public customers customer_id postgres
+4964; 2604 24907 DEFAULT public departments dept_id postgres
+4965; 2604 24917 DEFAULT public employees emp_id postgres
+4981; 2604 25066 DEFAULT public loans loan_id postgres
+4979; 2604 25052 DEFAULT public members member_id postgres
+4986; 2604 25133 DEFAULT public order_items order_item_id postgres
+4985; 2604 25102 DEFAULT public orders order_id postgres
+4958; 2604 24672 DEFAULT public products product_id postgres
+4974; 2604 24990 DEFAULT public student_enrollments enrollment_id postgres
+4971; 2604 24964 DEFAULT public students student_id postgres
+4959; 2604 24681 DEFAULT public transactions transaction_id postgres
+4988; 2604 25168 DEFAULT public transfer_logs log_id postgres
+4963; 2604 24889 DEFAULT public user_profiles profile_id postgres
+4961; 2604 24839 DEFAULT public users user_id postgres
+5248; 0 25157 TABLE DATA public accounts postgres
+5233; 0 25010 TABLE DATA public authors postgres
+5223; 0 24931 TABLE DATA public blog_posts postgres
+5236; 0 25031 TABLE DATA public book_authors postgres
+5235; 0 25020 TABLE DATA public books postgres
+5225; 0 24943 TABLE DATA public comments postgres
+5229; 0 24974 TABLE DATA public courses postgres
+5242; 0 25091 TABLE DATA public customers postgres
+5219; 0 24904 TABLE DATA public departments postgres
+5221; 0 24914 TABLE DATA public employees postgres
+5240; 0 25063 TABLE DATA public loans postgres
+5238; 0 25049 TABLE DATA public members postgres
+5246; 0 25130 TABLE DATA public order_items postgres
+5244; 0 25099 TABLE DATA public orders postgres
+5211; 0 24669 TABLE DATA public products postgres
+5231; 0 24987 TABLE DATA public student_enrollments postgres
+5227; 0 24961 TABLE DATA public students postgres
+5213; 0 24678 TABLE DATA public transactions postgres
+5250; 0 25165 TABLE DATA public transfer_logs postgres
+5217; 0 24886 TABLE DATA public user_profiles postgres
+5215; 0 24836 TABLE DATA public users postgres
+5278; 0 0 SEQUENCE SET public accounts_account_id_seq postgres
+5279; 0 0 SEQUENCE SET public authors_author_id_seq postgres
+5280; 0 0 SEQUENCE SET public blog_posts_post_id_seq postgres
+5281; 0 0 SEQUENCE SET public books_book_id_seq postgres
+5282; 0 0 SEQUENCE SET public comments_comment_id_seq postgres
+5283; 0 0 SEQUENCE SET public courses_course_id_seq postgres
+5284; 0 0 SEQUENCE SET public customers_customer_id_seq postgres
+5285; 0 0 SEQUENCE SET public departments_dept_id_seq postgres
+5286; 0 0 SEQUENCE SET public employees_emp_id_seq postgres
+5287; 0 0 SEQUENCE SET public loans_loan_id_seq postgres
+5288; 0 0 SEQUENCE SET public members_member_id_seq postgres
+5289; 0 0 SEQUENCE SET public order_items_order_item_id_seq postgres
+5290; 0 0 SEQUENCE SET public orders_order_id_seq postgres
+5291; 0 0 SEQUENCE SET public products_product_id_seq postgres
+5292; 0 0 SEQUENCE SET public student_enrollments_enrollment_id_seq postgres
+5293; 0 0 SEQUENCE SET public students_student_id_seq postgres
+5294; 0 0 SEQUENCE SET public transactions_transaction_id_seq postgres
+5295; 0 0 SEQUENCE SET public transfer_logs_log_id_seq postgres
+5296; 0 0 SEQUENCE SET public user_profiles_profile_id_seq postgres
+5297; 0 0 SEQUENCE SET public users_user_id_seq postgres
+5047; 2606 25163 CONSTRAINT public accounts accounts_pkey postgres
+5024; 2606 25018 CONSTRAINT public authors authors_pkey postgres
+5008; 2606 24941 CONSTRAINT public blog_posts blog_posts_pkey postgres
+5030; 2606 25037 CONSTRAINT public book_authors book_authors_pkey postgres
+5026; 2606 25030 CONSTRAINT public books books_isbn_key postgres
+5028; 2606 25028 CONSTRAINT public books books_pkey postgres
+5010; 2606 24954 CONSTRAINT public comments comments_pkey postgres
+5016; 2606 24985 CONSTRAINT public courses courses_course_code_key postgres
+5018; 2606 24983 CONSTRAINT public courses courses_pkey postgres
+5038; 2606 25097 CONSTRAINT public customers customers_pkey postgres
+5004; 2606 24911 CONSTRAINT public departments departments_pkey postgres
+5006; 2606 24924 CONSTRAINT public employees employees_pkey postgres
+5036; 2606 25074 CONSTRAINT public loans loans_pkey postgres
+5032; 2606 25061 CONSTRAINT public members members_email_key postgres
+5034; 2606 25059 CONSTRAINT public members members_pkey postgres
+5045; 2606 25137 CONSTRAINT public order_items order_items_pkey postgres
+5041; 2606 25105 CONSTRAINT public orders orders_pkey postgres
+4990; 2606 24676 CONSTRAINT public products products_pkey postgres
+5020; 2606 24996 CONSTRAINT public student_enrollments student_enrollments_pkey postgres
+5022; 2606 24998 CONSTRAINT public student_enrollments student_enrollments_student_id_course_id_key postgres
+5012; 2606 24972 CONSTRAINT public students students_email_key postgres
+5014; 2606 24970 CONSTRAINT public students students_pkey postgres
+4992; 2606 24685 CONSTRAINT public transactions transactions_pkey postgres
+5049; 2606 25171 CONSTRAINT public transfer_logs transfer_logs_pkey postgres
+5000; 2606 24895 CONSTRAINT public user_profiles user_profiles_pkey postgres
+5002; 2606 24897 CONSTRAINT public user_profiles user_profiles_user_id_key postgres
+4994; 2606 24849 CONSTRAINT public users users_email_key postgres
+4996; 2606 24845 CONSTRAINT public users users_pkey postgres
+4998; 2606 24847 CONSTRAINT public users users_username_key postgres
+5042; 1259 25154 INDEX public idx_order_items_order_id postgres
+5043; 1259 25155 INDEX public idx_order_items_product_id postgres
+5039; 1259 25153 INDEX public idx_orders_customer_id postgres
+5056; 2606 25043 FK CONSTRAINT public book_authors book_authors_author_id_fkey postgres
+5057; 2606 25038 FK CONSTRAINT public book_authors book_authors_book_id_fkey postgres
+5055; 2606 25148 FK CONSTRAINT public books books_author_id_fkey postgres
+5052; 2606 24955 FK CONSTRAINT public comments comments_post_id_fkey postgres
+5051; 2606 24925 FK CONSTRAINT public employees employees_dept_id_fkey postgres
+5058; 2606 25080 FK CONSTRAINT public loans loans_book_id_fkey postgres
+5059; 2606 25075 FK CONSTRAINT public loans loans_member_id_fkey postgres
+5061; 2606 25138 FK CONSTRAINT public order_items order_items_order_id_fkey postgres
+5062; 2606 25143 FK CONSTRAINT public order_items order_items_product_id_fkey postgres
+5060; 2606 25106 FK CONSTRAINT public orders orders_customer_id_fkey postgres
+5053; 2606 25004 FK CONSTRAINT public student_enrollments student_enrollments_course_id_fkey postgres
+5054; 2606 24999 FK CONSTRAINT public student_enrollments student_enrollments_student_id_fkey postgres
+5050; 2606 24898 FK CONSTRAINT public user_profiles user_profiles_user_id_fkey postgres
+PS C:\WINDOWS\system32> # Verify backup can be restored (to test database)
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\createdb.exe" -h localhost -U postgres test_restore
+Password:
+
+PS C:\WINDOWS\system32> & "C:\Program Files\PostgreSQL\18\bin\pg_restore.exe" -h localhost -U postgres -d test_restore "C:/Users/kas02/Documents/backup.dump"
+Password:
+
+PS C:\WINDOWS\system32>
